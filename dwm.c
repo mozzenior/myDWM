@@ -1181,7 +1181,7 @@ maprequest(XEvent *e) {
 
 void
 mirrortile(Monitor *m) {
-	int x, y, h, w, mh;
+	int x, y, h, w, rw, mh;
 	unsigned int i, n;
 	Client *c;
 
@@ -1198,13 +1198,12 @@ mirrortile(Monitor *m) {
 	x = m->wx;
 	y = (m->wy + mh > c->y + c->h) ? c->y + c->h + 2 * c->bw : m->wy + mh;
 	w = m->ww / n;
-	if(w < bh)
-		w = m->ww;
+	rw = m->ww % n;
 	h = (m->wy + mh > c->y + c->h) ? m->wy + m->wh - y : m->wh - mh;
 
-	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++) {
+	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++, rw--) {
 		resize(c, x, y,
-				((i + 1 == n) ?  m->wx + m->mw - x - 2 * c->bw : w - 2 * c->bw),
+				(((i + 1 == n) ?  m->wx + m->mw - x - 2 * c->bw : w - 2 * c->bw) + (( 0 < rw ) ? 1 : 0)),
 				h - 2 * c->bw, False);
 		if(w != m->ww)
 			x = c->x + WIDTH(c);
@@ -1669,7 +1668,7 @@ textnw(const char *text, unsigned int len) {
 
 void
 tile(Monitor *m) {
-	int x, y, h, w, mw;
+	int x, y, h, rh, w, mw;
 	unsigned int i, n;
 	Client *c;
 
@@ -1687,11 +1686,15 @@ tile(Monitor *m) {
 	y = m->wy;
 	w = (m->wx + mw > c->x + c->w) ? m->wx + m->ww - x : m->ww - mw;
 	h = m->wh / n;
-	if(h < bh)
+	rh = m->wh % n;
+	if(h < bh) {
 		h = m->wh;
-	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++) {
-		resize(c, x, y, w - 2 * c->bw, /* remainder */ ((i + 1 == n)
-		       ? m->wy + m->wh - y - 2 * c->bw : h - 2 * c->bw), False);
+		rh = 0;
+	}
+	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++, rh--) {
+		resize(c, x, y, w - 2 * c->bw,
+				(((i + 1 == n) ? m->wy + m->wh - y - 2 * c->bw : h - 2 * c->bw) + (( 0 < rh ) ? 1 : 0)),
+				False);
 		if(h != m->wh)
 			y = c->y + HEIGHT(c);
 	}
