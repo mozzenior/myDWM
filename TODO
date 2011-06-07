@@ -2,10 +2,8 @@ Multiple client in master area.
 
 Sticky system tray.
 
-Put CPU and memory usage in bar.
-
-Put date and time in bar.
-
 Reset key bindings according to Xmonad.
 
-Survey: why firefox always appears in 9th desktop?
+Each view has its own layout.
+
+Each view has a predefined name.
