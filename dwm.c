@@ -625,6 +625,8 @@ configurerequest(XEvent *e) {
 Monitor *
 createmon(void) {
 	Monitor *m;
+	int i;
+	View *view;
 
 	if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
 		die("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
@@ -635,6 +637,14 @@ createmon(void) {
 	m->lt[0] = &layouts[0];
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
+	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
+		view = &m->views[ i ];
+		strncpy( view->ltsymbol, layouts[ 0 ].symbol, sizeof view->ltsymbol );
+		view->mfact = mfact;
+		view->lt = &layouts[ 0 ];
+		view->mon = m;
+	}
+
 	return m;
 }
 
