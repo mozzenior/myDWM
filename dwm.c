@@ -229,7 +229,7 @@ static void run(void);
 static void scan(void);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
-static void setlayout(const Arg *arg);
+static void setlayout( const Arg *arg ); // XXX: Reviewed
 static void setmfact(const Arg *arg); // XXX: Reviewed
 static void setup(void);
 static void showhide(Client *c); // XXX: Reviewed
@@ -1594,16 +1594,13 @@ setclientstate(Client *c, long state) {
 }
 
 void
-setlayout(const Arg *arg) {
-	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
-		selmon->sellt ^= 1;
-	if(arg && arg->v)
-		selmon->lt[selmon->sellt] = (Layout *)arg->v;
-	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
-	if(selmon->sel)
-		arrange(selmon);
+setlayout( const Arg *arg ) {
+	SELVIEW( selmon ).lt = ( Layout * ) arg->v;
+	strncpy( SELVIEW( selmon ).ltsymbol, SELVIEW( selmon ).lt->symbol, sizeof SELVIEW( selmon ).ltsymbol );
+	if ( SELVIEW( selmon ).sel )
+		arrange( selmon );
 	else
-		drawbar(selmon);
+		drawbar( selmon );
 }
 
 void
