@@ -249,7 +249,7 @@ static void updatesizehints(Client *c);
 static void updatestatus(void);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
-static void view(const Arg *arg);
+static void view(const Arg *arg); // XXX: Reviewed
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
@@ -487,12 +487,8 @@ checkotherwm(void) {
 
 void
 cleanup(void) {
-	Arg a = {.ui = ~0};
-	Layout foo = { "", NULL };
 	Monitor *m;
 
-	view(&a);
-	selmon->lt[selmon->sellt] = &foo;
 	for(m = mons; m; m = m->next)
 		while(m->stack)
 			unmanage(m->stack, False);
@@ -2018,12 +2014,10 @@ updatewmhints(Client *c) {
 
 void
 view(const Arg *arg) {
-	if((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
-		return;
-	selmon->seltags ^= 1; /* toggle sel tagset */
-	if(arg->ui & TAGMASK)
-		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
-	arrange(selmon);
+	if ( arg->ui != selmon->selview ) {
+		selmon->selview = arg->ui;
+		arrange( selmon );
+	}
 }
 
 Client *
