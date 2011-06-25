@@ -1688,7 +1688,7 @@ spawn(const Arg *arg) {
 
 void
 tag(const Arg *arg) {
-	Client *const c = selmon->views[ selmon->selview ].sel;
+	Client *const c = SELVIEW( selmon ).sel;
 
 	if ( c ) {
 		detach2( c );
