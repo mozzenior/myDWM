@@ -227,7 +227,7 @@ static void resizemouse(const Arg *arg);
 static void restack( Monitor *const m ); // XXX: Reviewed
 static void run(void);
 static void scan(void);
-static void sendmon(Client *c, Monitor *m);
+static void sendmon( Client *c, Monitor *m ); // XXX: Reviewed
 static void setclientstate(Client *c, long state);
 static void setlayout( const Arg *arg ); // XXX: Reviewed
 static void setmfact(const Arg *arg); // XXX: Reviewed
@@ -1569,18 +1569,18 @@ scan(void) {
 }
 
 void
-sendmon(Client *c, Monitor *m) {
-	if(c->mon == m)
-		return;
-	unfocus(c, True);
-	detach(c);
-	detachstack(c);
-	c->mon = m;
-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
-	attach(c);
-	attachstack(c);
-	focus(NULL);
-	arrange(NULL);
+sendmon( Client *c, Monitor *m ) {
+	if ( c->mon != m ) {
+		unfocus( c, True );
+		detach2( c );
+		detachstack2( c );
+		c->mon = m;
+		c->view = m->selview;
+		attach2( c );
+		attachstack2( c );
+		focus( NULL );
+		arrange( NULL );
+	}
 }
 
 void
