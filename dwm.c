@@ -53,6 +53,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
+#define SELVIEW(M)              (M->views[ M->selview ])
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };        /* cursor */
@@ -869,26 +870,25 @@ expose(XEvent *e) {
 }
 
 void
-focus(Client *c) {
-	if(!c || !ISVISIBLE(c))
-		for(c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
-	/* was if(selmon->sel) */
-	if(selmon->sel && selmon->sel != c)
-		unfocus(selmon->sel, False);
-	if(c) {
-		if(c->mon != selmon)
+focus( Client *c ) {
+	if ( !c )
+		c = SELVIEW( selmon ).stack;
+	if ( SELVIEW( selmon ).sel && SELVIEW( selmon ).sel != c )
+		unfocus( SELVIEW( selmon ).sel, False );
+	if ( c ) {
+		if ( c->mon != selmon )
 			selmon = c->mon;
-		if(c->isurgent)
-			clearurgent(c);
-		detachstack(c);
-		attachstack(c);
-		grabbuttons(c, True);
-		XSetWindowBorder(dpy, c->win, dc.sel[ColBorder]);
-		XSetInputFocus(dpy, c->win, RevertToPointerRoot, CurrentTime);
+		if ( c->isurgent )
+			clearurgent( c );
+		detachstack2( c );
+		attachstack2( c );
+		grabbuttons( c, True );
+		XSetWindowBorder( dpy, c->win, dc.sel[ ColBorder ] );
+		XSetInputFocus( dpy, c->win, RevertToPointerRoot, CurrentTime );
 	}
 	else
-		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
-	selmon->sel = c;
+		XSetInputFocus( dpy, root, RevertToPointerRoot, CurrentTime );
+	SELVIEW( selmon ).sel = c;
 	drawbars();
 }
 
