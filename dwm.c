@@ -217,7 +217,7 @@ static void maprequest(XEvent *e);
 static void mirrortile(Monitor *m);
 static void monocle(Monitor *m);
 static void movemouse(const Arg *arg);
-static Client *nexttiled(Client *c);
+static Client *nexttiled(Client *c); // XXX: Reviewed
 static Monitor *ptrtomon(int x, int y);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
@@ -1351,8 +1351,8 @@ movemouse(const Arg *arg) {
 }
 
 Client *
-nexttiled(Client *c) {
-	for(; c && (c->isfloating || !ISVISIBLE(c)); c = c->next);
+nexttiled( Client *c ) {
+	for ( ; c && c->isfloating ; c = c->next );
 	return c;
 }
 
