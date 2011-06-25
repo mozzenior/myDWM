@@ -169,9 +169,9 @@ static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact); // XXX: Reviewed
 static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
-static void attach(Client *c);
+static void attach(Client *c); // XXX: Reviewed
 static void attach2(Client *c); // TODO: Rename to attach.
-static void attachstack(Client *c);
+static void attachstack(Client *c); // XXX: Reviewed
 static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -184,12 +184,12 @@ static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
-static void detach(Client *c);
+static void detach(Client *c); // XXX: Reviewed
 static void detach2( Client *c ); // TODO: Rename to detach.
-static void detachstack(Client *c);
+static void detachstack(Client *c); // XXX: Reviewed
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...);
-static Monitor *dirtomon(int dir);
+static Monitor *dirtomon(int dir); // XXX: Reviewed
 static void drawbar(Monitor *m); // XXX: Reviewed
 static void drawbars(void); // XXX: Reviewed
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]); // XXX: Reviewed
@@ -198,7 +198,7 @@ static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
-static void focusmon(const Arg *arg);
+static void focusmon( const Arg *arg ); // XXX: Reviewed
 static void focusstack(const Arg *arg); // XXX: Reviewed
 static unsigned long getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y);
@@ -911,16 +911,14 @@ focusin(XEvent *e) { /* there are some broken focus acquiring clients */
 }
 
 void
-focusmon(const Arg *arg) {
-	Monitor *m = NULL;
+focusmon( const Arg *arg ) {
+	Monitor *m;
 
-	if(!mons->next)
-		return;
-	if((m = dirtomon(arg->i)) == selmon)
-		return;
-	unfocus(selmon->sel, True);
-	selmon = m;
-	focus(NULL);
+	if ( ( m = dirtomon( arg->i ) ) != selmon ) {
+		unfocus( SELVIEW( selmon ).sel, True );
+		selmon = m;
+		focus( NULL );
+	}
 }
 
 void
