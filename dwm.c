@@ -230,7 +230,7 @@ static void scan(void);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setlayout(const Arg *arg);
-static void setmfact(const Arg *arg);
+static void setmfact(const Arg *arg); // XXX: Reviewed
 static void setup(void);
 static void showhide(Client *c); // XXX: Reviewed
 static void sigchld(int unused);
@@ -1606,18 +1606,17 @@ setlayout(const Arg *arg) {
 		drawbar(selmon);
 }
 
-/* arg > 1.0 will set mfact absolutly */
 void
-setmfact(const Arg *arg) {
+setmfact( const Arg *arg ) {
 	float f;
 
-	if(!arg || !selmon->lt[selmon->sellt]->arrange)
-		return;
-	f = arg->f < 1.0 ? arg->f + selmon->mfact : arg->f - 1.0;
-	if(f < 0.1 || f > 0.9)
-		return;
-	selmon->mfact = f;
-	arrange(selmon);
+	if ( arg && -1.0 < arg->f && arg->f < 1.0 && SELVIEW( selmon ).lt->arrange ) {
+		f = arg->f + SELVIEW( selmon ).mfact;
+		if ( 0.1 <= f && f <= 0.9 ) {
+			SELVIEW( selmon ).mfact = f;
+			arrange( selmon );
+		}
+	}
 }
 
 void
