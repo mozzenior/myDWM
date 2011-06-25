@@ -241,7 +241,7 @@ static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg); // XXX: Reviewed
 static void togglefloating( const Arg *arg ); // XXX: Reviewed
-static void unfocus(Client *c, Bool setfocus);
+static void unfocus(Client *c, Bool setfocus); // XXX: Reviewed
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
 static Bool updategeom(void);
