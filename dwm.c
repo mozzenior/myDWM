@@ -167,7 +167,7 @@ typedef struct {
 /* function declarations */
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
-static void arrange(Monitor *m); // XXX: Reviewed
+static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c);
 static void attach2(Client *c); // TODO: Rename to attach.
@@ -238,7 +238,7 @@ static void spawn(const Arg *arg);
 static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
-static void tile(Monitor *);
+static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
@@ -1738,36 +1738,40 @@ textnw(const char *text, unsigned int len) {
 }
 
 void
-tile(Monitor *m) {
+tile( Monitor *const m ) {
 	int x, y, h, rh, w, mw;
 	unsigned int i, n;
 	Client *c;
 
-	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if(n == 0)
+	for ( n = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), n++ );
+	if ( n == 0 )
 		return;
-	/* master */
-	c = nexttiled(m->clients);
+
+	// master
+
+	c = nexttiled( SELVIEW( m ).clients );
 	mw = m->mfact * m->ww;
-	resize(c, m->wx, m->wy, (n == 1 ? m->ww : mw) - 2 * c->bw, m->wh - 2 * c->bw, False);
-	if(--n == 0)
+	resize( c, m->wx, m->wy, ( n == 1 ? m->ww : mw ) - 2 * c->bw, m->wh - 2 * c->bw, False );
+	if ( --n == 0 )
 		return;
-	/* tile stack */
-	x = (m->wx + mw > c->x + c->w) ? c->x + c->w + 2 * c->bw : m->wx + mw;
+
+	// tile stack
+
+	x = ( m->wx + mw > c->x + c->w ) ? c->x + c->w + 2 * c->bw : m->wx + mw;
 	y = m->wy;
-	w = (m->wx + mw > c->x + c->w) ? m->wx + m->ww - x : m->ww - mw;
+	w = ( m->wx + mw > c->x + c->w ) ? m->wx + m->ww - x : m->ww - mw;
 	h = m->wh / n;
 	rh = m->wh % n;
-	if(h < bh) {
+	if ( h < bh ) {
 		h = m->wh;
 		rh = 0;
 	}
-	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++, rh--) {
-		resize(c, x, y, w - 2 * c->bw,
-				(((i + 1 == n) ? m->wy + m->wh - y - 2 * c->bw : h - 2 * c->bw) + (( 0 < rh ) ? 1 : 0)),
-				False);
-		if(h != m->wh)
-			y = c->y + HEIGHT(c);
+	for (i = 0, c = nexttiled( c->next ) ; c ; c = nexttiled( c->next ), i++, rh-- ) {
+		resize( c, x, y, w - 2 * c->bw,
+			( ( ( i + 1 == n ) ? m->wy + m->wh - y - 2 * c->bw : h - 2 * c->bw ) + ( ( 0 < rh ) ? 1 : 0 ) ),
+			False);
+		if ( h != m->wh )
+			y = c->y + HEIGHT( c );
 	}
 }
 
