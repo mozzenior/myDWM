@@ -178,7 +178,7 @@ static void detach(Client *c); // XXX: Reviewed
 static void detach2( Client *c ); // TODO: Rename to detach.
 static void detachstack(Client *c); // XXX: Reviewed
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
-static void die(const char *errstr, ...);
+static void die(const char *errstr, ...); // XXX: Reviewed
 static Monitor *dirtomon(int dir); // XXX: Reviewed
 static void drawbar(Monitor *m); // XXX: Reviewed
 static void drawbars(void); // XXX: Reviewed
