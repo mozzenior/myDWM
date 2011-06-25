@@ -88,7 +88,7 @@ struct Client {
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
-	unsigned int tags;
+	unsigned int tags; // TODO: Delete
 	Bool isfixed, isfloating, isurgent, oldstate;
 	Client *next;
 	Client *snext;
@@ -190,7 +190,7 @@ static void detachstack(Client *c);
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...);
 static Monitor *dirtomon(int dir);
-static void drawbar(Monitor *m);
+static void drawbar(Monitor *m); // XXX: Reviewed
 static void drawbars(void); // XXX: Reviewed
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
@@ -206,6 +206,7 @@ static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void);
+static Bool hasurgentclient( const View *const v );
 static void initfont(const char *fontstr);
 static Bool isprotodel(Client *c);
 static void keypress(XEvent *e);
@@ -738,51 +739,60 @@ dirtomon(int dir) {
 void
 drawbar(Monitor *m) {
 	int x;
-	unsigned int i, occ = 0, urg = 0;
+	Bool occ, urg;
+	unsigned int i;
 	unsigned long *col;
-	Client *c;
 
-	for(c = m->clients; c; c = c->next) {
-		occ |= c->tags;
-		if(c->isurgent)
-			urg |= c->tags;
-	}
+	// view tags
+
 	dc.x = 0;
-	for(i = 0; i < LENGTH(tags); i++) {
-		dc.w = TEXTW(tags[i]);
-		col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.norm;
-		drawtext(tags[i], col, urg & 1 << i);
-		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-		           occ & 1 << i, urg & 1 << i, col);
+	for ( i = 0 ; i < LENGTH( tags ) ; i++ ) {
+		dc.w = TEXTW( tags[ i ] );
+		col = ( i == m->selview ) ? dc.sel : dc.norm;
+		occ = ( NULL == m->views[ i ].clients );
+		urg = hasurgentclient( &m->views[ i ] );
+		drawtext( tags[ i ], col, urg );
+		drawsquare( m == selmon && m->views[ i ].sel && i == m->selview,
+			occ, urg, col );
 		dc.x += dc.w;
 	}
-	dc.w = blw = TEXTW(m->ltsymbol);
-	drawtext(m->ltsymbol, dc.norm, False);
+
+	// layout name of selected view
+
+	dc.w = blw = TEXTW( SELVIEW( m ).ltsymbol );
+	drawtext( SELVIEW( m ).ltsymbol, dc.norm, False );
 	dc.x += dc.w;
+
+	// status
+
 	x = dc.x;
-	if(m == selmon) { /* status is only drawn on selected monitor */
-		dc.w = TEXTW(stext);
+	if ( m == selmon ) { /* status is only drawn on selected monitor */
+		dc.w = TEXTW( stext );
 		dc.x = m->ww - dc.w;
-		if(dc.x < x) {
+		if ( !( x <= dc.x ) ) {
 			dc.x = x;
 			dc.w = m->ww - x;
 		}
-		drawtext(stext, dc.norm, False);
+		drawtext( stext, dc.norm, False );
 	}
 	else
 		dc.x = m->ww;
-	if((dc.w = dc.x - x) > bh) {
+
+	// name of selected client of selected view
+
+	if ( ( dc.w = dc.x - x ) > bh ) {
 		dc.x = x;
-		if(m->sel) {
-			col = m == selmon ? dc.sel : dc.norm;
-			drawtext(m->sel->name, col, False);
-			drawsquare(m->sel->isfixed, m->sel->isfloating, False, col);
+		if ( SELVIEW( m ).sel ) {
+			col = ( m == selmon ) ? dc.sel : dc.norm;
+			drawtext( SELVIEW( m ).sel->name, col, False );
+			drawsquare( SELVIEW( m ).sel->isfixed, SELVIEW( m ).sel->isfloating, False, col );
 		}
 		else
-			drawtext(NULL, dc.norm, False);
+			drawtext( NULL, dc.norm, False );
 	}
-	XCopyArea(dpy, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
-	XSync(dpy, False);
+
+	XCopyArea( dpy, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0 );
+	XSync( dpy, False );
 }
 
 void
@@ -1038,6 +1048,15 @@ grabkeys(void) {
 						 True, GrabModeAsync, GrabModeAsync);
 		}
 	}
+}
+
+Bool
+hasurgentclient( const View *const v ) {
+	const Client *c;
+	for ( c = v->clients ; c ; c = c->next )
+		if ( c->isurgent )
+			return True;
+	return False;
 }
 
 void
