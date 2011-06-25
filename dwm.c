@@ -245,7 +245,7 @@ static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
 static Bool updategeom(void);
-static void updatebarpos(Monitor *m);
+static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void);
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
