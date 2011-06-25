@@ -192,7 +192,7 @@ static void die(const char *errstr, ...);
 static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m); // XXX: Reviewed
 static void drawbars(void); // XXX: Reviewed
-static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]); // XXX: Reviewed
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert); // XXX: Reviewed
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
