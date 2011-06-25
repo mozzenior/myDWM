@@ -224,7 +224,7 @@ static void quit(const Arg *arg);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
-static void restack(Monitor *m);
+static void restack( Monitor *const m ); // XXX: Reviewed
 static void run(void);
 static void scan(void);
 static void sendmon(Client *c, Monitor *m);
@@ -1509,27 +1509,27 @@ resizemouse(const Arg *arg) {
 }
 
 void
-restack(Monitor *m) {
+restack( Monitor *const m ) {
 	Client *c;
 	XEvent ev;
 	XWindowChanges wc;
 
-	drawbar(m);
-	if(!m->sel)
+	drawbar( m );
+	if ( !SELVIEW( m ).sel )
 		return;
-	if(m->sel->isfloating || !m->lt[m->sellt]->arrange)
-		XRaiseWindow(dpy, m->sel->win);
-	if(m->lt[m->sellt]->arrange) {
+	if ( SELVIEW( m ).sel->isfloating || !SELVIEW( m ).lt->arrange )
+		XRaiseWindow( dpy, SELVIEW( m ).sel->win );
+	if ( SELVIEW( m ).lt->arrange ) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
-		for(c = m->stack; c; c = c->snext)
-			if(!c->isfloating && ISVISIBLE(c)) {
-				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
+		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
+			if ( !c->isfloating ) {
+				XConfigureWindow( dpy, c->win, CWSibling | CWStackMode, &wc );
 				wc.sibling = c->win;
 			}
 	}
-	XSync(dpy, False);
-	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
+	XSync( dpy, False );
+	while ( XCheckMaskEvent( dpy, EnterWindowMask, &ev ) );
 }
 
 void
