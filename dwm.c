@@ -199,7 +199,7 @@ static void expose(XEvent *e);
 static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
-static void focusstack(const Arg *arg);
+static void focusstack(const Arg *arg); // XXX: Reviewed
 static unsigned long getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -927,25 +927,23 @@ void
 focusstack(const Arg *arg) {
 	Client *c = NULL, *i;
 
-	if(!selmon->sel)
-		return;
-	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
-		if(!c)
-			for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-	}
-	else {
-		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i))
+	if ( SELVIEW( selmon ).sel ) {
+		if ( arg->i > 0 ) {
+			c = SELVIEW( selmon ).sel->next;
+			if ( !c )
+				c = SELVIEW( selmon ).clients;
+		}
+		else {
+			for ( i = SELVIEW( selmon ).clients ; i != SELVIEW( selmon ).sel ; i = i->next )
 				c = i;
-		if(!c)
-			for(; i; i = i->next)
-				if(ISVISIBLE(i))
+			if ( !c )
+				for ( ; i ; i = i->next )
 					c = i;
-	}
-	if(c) {
-		focus(c);
-		restack(selmon);
+		}
+		if ( c ) {
+			focus( c );
+			restack( selmon );
+		}
 	}
 }
 
