@@ -223,7 +223,7 @@ static void propertynotify(XEvent *e);
 static void quit(const Arg *arg); // XXX: Reviewed
 static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
 static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
-static void resizemouse(const Arg *arg);
+static void resizemouse( const Arg *arg ); // XXX: Reviewed
 static void restack( Monitor *const m ); // XXX: Reviewed
 static void run(void);
 static void scan(void);
@@ -1308,12 +1308,12 @@ movemouse( const Arg *arg ) {
 	restack( selmon );
 	ocx = c->x;
 	ocy = c->y;
+
 	if ( !( XGrabPointer( dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[ CurMove ], CurrentTime ) == GrabSuccess ) )
 		return;
 	if ( !getrootptr( &x, &y ) )
 		return;
-
 	do {
 		XMaskEvent( dpy, MOUSEMASK | ExposureMask | SubstructureRedirectMask, &ev );
 
@@ -1323,6 +1323,7 @@ movemouse( const Arg *arg ) {
 		case MapRequest:
 			handler[ ev.type ]( &ev );
 			break;
+
 		case MotionNotify:
 			nx = ocx + ( ev.xmotion.x - x );
 			ny = ocy + ( ev.xmotion.y - y );
@@ -1349,6 +1350,7 @@ movemouse( const Arg *arg ) {
 		}
 	} while ( ev.type != ButtonRelease );
 	XUngrabPointer( dpy, CurrentTime );
+
 	if ( ( m = ptrtomon( c->x + c->w / 2, c->y + c->h / 2 ) ) != selmon ) {
 		sendmon( c, m );
 		selmon = m;
@@ -1465,52 +1467,56 @@ resizeclient(Client *c, int x, int y, int w, int h) {
 }
 
 void
-resizemouse(const Arg *arg) {
-	int ocx, ocy;
-	int nw, nh;
-	Client *c;
+resizemouse( const Arg *arg ) {
+	int ocx, ocy, nw, nh;
+	Client *const c = SELVIEW( selmon ).sel;
 	Monitor *m;
 	XEvent ev;
 
-	if(!(c = selmon->sel))
+	if ( !c )
 		return;
-	restack(selmon);
+
+	restack( selmon );
 	ocx = c->x;
 	ocy = c->y;
-	if(XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
-	                None, cursor[CurResize], CurrentTime) != GrabSuccess)
+
+	if ( !( XGrabPointer( dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
+		None, cursor[ CurResize ], CurrentTime ) == GrabSuccess ) )
 		return;
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
+	XWarpPointer( dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1 );
 	do {
-		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
-		switch(ev.type) {
+		XMaskEvent( dpy, MOUSEMASK | ExposureMask | SubstructureRedirectMask, &ev );
+
+		switch ( ev.type ) {
 		case ConfigureRequest:
 		case Expose:
 		case MapRequest:
-			handler[ev.type](&ev);
+			handler[ ev.type ]( &ev );
 			break;
+
 		case MotionNotify:
-			nw = MAX(ev.xmotion.x - ocx - 2 * c->bw + 1, 1);
-			nh = MAX(ev.xmotion.y - ocy - 2 * c->bw + 1, 1);
-			if(snap && nw >= selmon->wx && nw <= selmon->wx + selmon->ww
-			&& nh >= selmon->wy && nh <= selmon->wy + selmon->wh)
-			{
-				if(!c->isfloating && selmon->lt[selmon->sellt]->arrange
-				&& (abs(nw - c->w) > snap || abs(nh - c->h) > snap))
-					togglefloating(NULL);
+			nw = MAX( ev.xmotion.x - ocx - 2 * c->bw + 1, 1 );
+			nh = MAX( ev.xmotion.y - ocy - 2 * c->bw + 1, 1 );
+			if ( snap
+				&& ( selmon->wx <= nw && nw <= selmon->wx + selmon->ww )
+				&& ( selmon->wy <= nh && nh <= selmon->wy + selmon->wh ) ) {
+				if ( ( !c->isfloating && SELVIEW( selmon ).lt->arrange )
+					&& ( abs( nw - c->w ) > snap || abs( nh - c->h ) > snap ) )
+					togglefloating( NULL );
 			}
-			if(!selmon->lt[selmon->sellt]->arrange || c->isfloating)
-				resize(c, c->x, c->y, nw, nh, True);
+			if ( !c->isfloating && SELVIEW( selmon ).lt->arrange )
+				resize( c, c->x, c->y, nw, nh, True );
 			break;
 		}
-	} while(ev.type != ButtonRelease);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
-	XUngrabPointer(dpy, CurrentTime);
-	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
-	if((m = ptrtomon(c->x + c->w / 2, c->y + c->h / 2)) != selmon) {
-		sendmon(c, m);
+	} while ( ev.type != ButtonRelease );
+	XWarpPointer( dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1 );
+	XUngrabPointer( dpy, CurrentTime );
+
+	while ( XCheckMaskEvent( dpy, EnterWindowMask, &ev ) );
+	if ( ( m = ptrtomon( c->x + c->w / 2, c->y + c->h / 2 ) ) != selmon ) {
+		sendmon( c, m );
 		selmon = m;
-		focus(NULL);
+		focus( NULL );
 	}
 }
 
