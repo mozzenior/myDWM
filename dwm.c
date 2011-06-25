@@ -214,7 +214,7 @@ static void killclient(const Arg *arg);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
-static void mirrortile(Monitor *m);
+static void mirrortile( Monitor *const m ); // XXX: Reviewed
 static void monocle( Monitor *const m ); // XXX: Reviewed
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c); // XXX: Reviewed
@@ -1251,33 +1251,37 @@ maprequest(XEvent *e) {
 }
 
 void
-mirrortile(Monitor *m) {
+mirrortile( Monitor *const m ) {
 	int x, y, h, w, rw, mh;
 	unsigned int i, n;
 	Client *c;
 
-	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if(n == 0)
+	for ( n = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), n++ );
+	if ( n == 0 )
 		return;
-	/* master */
-	c = nexttiled(m->clients);
+
+	// master
+
+	c = nexttiled( SELVIEW( m ).clients );
 	mh = m->mfact * m->wh;
-	resize(c, m->wx, m->wy, m->ww - 2 * c->bw, (n == 1 ? m->wh : mh) - 2 * c->bw, False);
-	if(--n == 0)
+	resize( c, m->wx, m->wy, m->ww - 2 * c->bw, ( n == 1 ? m->wh : mh ) - 2 * c->bw, False );
+	if ( --n == 0 )
 		return;
-	/* tile stack */
+
+	// tile stack
+
 	x = m->wx;
-	y = (m->wy + mh > c->y + c->h) ? c->y + c->h + 2 * c->bw : m->wy + mh;
+	y = ( m->wy + mh > c->y + c->h ) ? c->y + c->h + 2 * c->bw : m->wy + mh;
 	w = m->ww / n;
 	rw = m->ww % n;
-	h = (m->wy + mh > c->y + c->h) ? m->wy + m->wh - y : m->wh - mh;
+	h = ( m->wy + mh > c->y + c->h ) ? m->wy + m->wh - y : m->wh - mh;
 
-	for(i = 0, c = nexttiled(c->next); c; c = nexttiled(c->next), i++, rw--) {
-		resize(c, x, y,
-				(((i + 1 == n) ?  m->wx + m->mw - x - 2 * c->bw : w - 2 * c->bw) + (( 0 < rw ) ? 1 : 0)),
-				h - 2 * c->bw, False);
-		if(w != m->ww)
-			x = c->x + WIDTH(c);
+	for ( i = 0, c = nexttiled( c->next ) ; c ; c = nexttiled( c->next ), i++, rw-- ) {
+		resize( c, x, y,
+			( ( ( i + 1 == n ) ?  m->wx + m->mw - x - 2 * c->bw : w - 2 * c->bw ) + ( ( 0 < rw ) ? 1 : 0 ) ),
+			h - 2 * c->bw, False );
+		if ( w != m->ww )
+			x = c->x + WIDTH( c );
 	}
 }
 
