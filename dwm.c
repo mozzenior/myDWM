@@ -230,7 +230,7 @@ static void setclientstate(Client *c, long state);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
-static void showhide(Client *c);
+static void showhide(Client *c); // XXX: Reviewed
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg); // XXX: Reviewed
@@ -1656,19 +1656,13 @@ setup(void) {
 }
 
 void
-showhide(Client *c) {
-	if(!c)
+showhide( Client *c ) {
+	if ( !c )
 		return;
-	if(ISVISIBLE(c)) { /* show clients top down */
-		XMoveWindow(dpy, c->win, c->x, c->y);
-		if(!c->mon->lt[c->mon->sellt]->arrange || c->isfloating)
-			resize(c, c->x, c->y, c->w, c->h, False);
-		showhide(c->snext);
-	}
-	else { /* hide clients bottom up */
-		showhide(c->snext);
-		XMoveWindow(dpy, c->win, c->x + 2 * sw, c->y);
-	}
+	XMoveWindow( dpy, c->win, c->x, c->y );
+	if ( !c->mon->lt[ c->mon->sellt ]->arrange || c->isfloating )
+		resize( c, c->x, c->y, c->w, c->h, False );
+	showhide( c->snext );
 }
 
 
