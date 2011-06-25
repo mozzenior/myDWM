@@ -201,7 +201,7 @@ static void focusin(XEvent *e);
 static void focusmon( const Arg *arg ); // XXX: Reviewed
 static void focusstack(const Arg *arg); // XXX: Reviewed
 static unsigned long getcolor(const char *colstr);
-static Bool getrootptr(int *x, int *y);
+static Bool getrootptr(int *x, int *y); // XXX: Reviewed
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
@@ -1296,6 +1296,7 @@ monocle( Monitor *const m ) {
 
 void
 movemouse( const Arg *arg ) {
+	// TODO: Refactor me.
 	int x, y, ocx, ocy, nx, ny;
 	Client *const c = SELVIEW( selmon ).sel;
 	Monitor *m;
