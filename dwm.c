@@ -239,7 +239,7 @@ static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *); // XXX: Reviewed
-static void togglebar(const Arg *arg);
+static void togglebar(const Arg *arg); // XXX: Reviewed
 static void togglefloating(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
