@@ -595,8 +595,8 @@ createmon(void) {
 	int i;
 	View *view;
 
-	if ( !( m = ( Monitor * ) calloc( 1, sizeof Monitor ) ) )
-		die( "fatal: could not malloc() %u bytes\n", sizeof Monitor );
+	if ( !( m = ( Monitor * ) malloc( sizeof( Monitor ) ) ) )
+		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
 	m->tagset[ 0 ] = m->tagset[ 1 ] = 1;
 	m->mfact = mfact;
 	m->showbar = showbar;
