@@ -166,7 +166,7 @@ typedef struct {
 
 /* function declarations */
 static void applyrules(Client *c);
-static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
+static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact); // XXX: Reviewed
 static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c);
