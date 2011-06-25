@@ -168,7 +168,7 @@ typedef struct {
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *m); // XXX: Reviewed
-static void arrangemon(Monitor *m);
+static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c);
 static void attach2(Client *c); // TODO: Rename to attach.
 static void attachstack(Client *c);
@@ -415,11 +415,11 @@ arrange( Monitor *m ) {
 }
 
 void
-arrangemon(Monitor *m) {
-	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
-	if(m->lt[m->sellt]->arrange)
-		m->lt[m->sellt]->arrange(m);
-	restack(m);
+arrangemon( Monitor *const m ) {
+	strncpy( SELVIEW( m ).ltsymbol, SELVIEW( m ).lt->symbol, sizeof SELVIEW( m ).ltsymbol );
+	if ( SELVIEW( m ).lt->arrange )
+		SELVIEW( m ).lt->arrange( m );
+	restack( m );
 }
 
 void
