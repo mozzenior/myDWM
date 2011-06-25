@@ -236,7 +236,6 @@ static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
-static void toggletag(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -1735,19 +1734,6 @@ togglefloating(const Arg *arg) {
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
 		       selmon->sel->w, selmon->sel->h, False);
 	arrange(selmon);
-}
-
-void
-toggletag(const Arg *arg) {
-	unsigned int newtags;
-
-	if(!selmon->sel)
-		return;
-	newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
-	if(newtags) {
-		selmon->sel->tags = newtags;
-		arrange(selmon);
-	}
 }
 
 void
