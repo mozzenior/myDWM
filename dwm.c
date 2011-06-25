@@ -236,7 +236,7 @@ static void showhide(Client *c); // XXX: Reviewed
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg); // XXX: Reviewed
-static void tagmon(const Arg *arg);
+static void tagmon( const Arg *arg ); // XXX: Reviewed
 static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg); // XXX: Reviewed
@@ -1715,10 +1715,10 @@ tag(const Arg *arg) {
 }
 
 void
-tagmon(const Arg *arg) {
-	if(!selmon->sel || !mons->next)
-		return;
-	sendmon(selmon->sel, dirtomon(arg->i));
+tagmon( const Arg *arg ) {
+	if ( SELVIEW( selmon ).sel ) {
+		sendmon( SELVIEW( selmon ).sel, dirtomon( arg->i ) );
+	}
 }
 
 int
