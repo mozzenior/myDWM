@@ -169,7 +169,9 @@ static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool inter
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
+static void attach2(Client *c); // TODO: Rename to attach.
 static void attachstack(Client *c);
+static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void);
@@ -182,7 +184,9 @@ static void configurerequest(XEvent *e);
 static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
+static void detach2( Client *c ); // TODO: Rename to detach.
 static void detachstack(Client *c);
+static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...);
 static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
@@ -229,7 +233,7 @@ static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
-static void tag(const Arg *arg);
+static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *);
@@ -423,9 +427,21 @@ attach(Client *c) {
 }
 
 void
+attach2(Client *c) {
+	c->next = c->mon->views[ c->view ].clients;
+	c->mon->views[ c->view ].clients = c;
+}
+
+void
 attachstack(Client *c) {
 	c->snext = c->mon->stack;
 	c->mon->stack = c;
+}
+
+void
+attachstack2(Client *c) {
+	c->snext = c->mon->views[ c->view ].stack;
+	c->mon->views[ c->view ].stack = c;
 }
 
 void
@@ -658,6 +674,14 @@ detach(Client *c) {
 }
 
 void
+detach2( Client *c ) {
+	Client **tc;
+
+	for ( tc = &c->mon->views[ c->view ].clients ; *tc != c ; tc = &( *tc )->next );
+	*tc = c->next;
+}
+
+void
 detachstack(Client *c) {
 	Client **tc, *t;
 
@@ -667,6 +691,19 @@ detachstack(Client *c) {
 	if(c == c->mon->sel) {
 		for(t = c->mon->stack; t && !ISVISIBLE(t); t = t->snext);
 		c->mon->sel = t;
+	}
+}
+
+void
+detachstack2( Client *c ) {
+	Client **tc, *t;
+
+	for ( tc = &c->mon->views[ c->view ].stack ; *tc != c ; tc = &( *tc )->snext );
+	*tc = c->snext;
+
+	if ( c == c->mon->views[ c->view ].sel ) {
+		for ( t = c->mon->views[ c->view ].stack ; t && !ISVISIBLE( t ) ; t = t->snext );
+		c->mon->views[ c->view ].sel = t;
 	}
 }
 
@@ -1657,9 +1694,15 @@ spawn(const Arg *arg) {
 
 void
 tag(const Arg *arg) {
-	if(selmon->sel && arg->ui & TAGMASK) {
-		selmon->sel->tags = arg->ui & TAGMASK;
-		arrange(selmon);
+	Client *const c = selmon->views[ selmon->selview ].sel;
+
+	if ( c ) {
+		detach2( c );
+		detachstack2( c );
+		c->view = arg->ui;
+		attach2( c );
+		attachstack2( c );
+		arrange( selmon );
 	}
 }
 
