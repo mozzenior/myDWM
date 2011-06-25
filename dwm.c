@@ -130,27 +130,26 @@ typedef struct {
 	Client *sel;
 	Client *stack;
 	const Layout *lt;
-	Monitor *mon;
 } View;
 
 struct Monitor {
-	char ltsymbol[16];
-	float mfact;
+	char ltsymbol[16]; // TODO: Delete
+	float mfact; // TODO: Delete
 	int num;
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
-	unsigned int seltags;
-	unsigned int sellt;
-	unsigned int tagset[2];
+	unsigned int seltags; // TODO: Delete
+	unsigned int sellt; // TODO: Delete
+	unsigned int tagset[2]; // TODO: Delete
 	Bool showbar;
 	Bool topbar;
-	Client *clients;
-	Client *sel;
-	Client *stack;
+	Client *clients; // TODO: Delete
+	Client *sel; // TODO: Delete
+	Client *stack; // TODO: Delete
 	Monitor *next;
 	Window barwin;
-	const Layout *lt[2];
+	const Layout *lt[2]; // TODO: Delete
 	unsigned int selview;
 	View views[ 9 ];
 };
@@ -636,7 +635,6 @@ createmon(void) {
 		strncpy( view->ltsymbol, layouts[ 0 ].symbol, sizeof view->ltsymbol );
 		view->mfact = mfact;
 		view->lt = &layouts[ 0 ];
-		view->mon = m;
 	}
 
 	return m;
