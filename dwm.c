@@ -215,7 +215,7 @@ static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
 static void mirrortile(Monitor *m);
-static void monocle(Monitor *m);
+static void monocle( Monitor *const m ); // XXX: Reviewed
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c); // XXX: Reviewed
 static Monitor *ptrtomon(int x, int y);
@@ -1282,17 +1282,16 @@ mirrortile(Monitor *m) {
 }
 
 void
-monocle(Monitor *m) {
+monocle( Monitor *const m ) {
 	unsigned int n = 0;
 	Client *c;
 
-	for(c = m->clients; c; c = c->next)
-		if(ISVISIBLE(c))
-			n++;
-	if(n > 0) /* override layout symbol */
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
-	for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False);
+	for ( c = SELVIEW( m ).clients ; c ; c = c->next )
+		n++;
+	if ( n > 0 ) /* override layout symbol */
+		snprintf( SELVIEW( m ).ltsymbol, sizeof SELVIEW( m ).ltsymbol, "[%d]", n );
+	for ( c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ) )
+		resize( c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False );
 }
 
 void
