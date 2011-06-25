@@ -208,7 +208,7 @@ static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void);
 static Bool hasurgentclient( const View *const v );
 static void initfont(const char *fontstr);
-static Bool isprotodel(Client *c);
+static Bool isprotodel(Client *c); // XXX: Reviewed
 static void keypress(XEvent *e);
 static void killclient( const Arg *arg ); // XXX: Reviewed
 static void manage(Window w, XWindowAttributes *wa);
