@@ -222,7 +222,7 @@ static Monitor *ptrtomon(int x, int y);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
-static void resizeclient(Client *c, int x, int y, int w, int h);
+static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
 static void resizemouse(const Arg *arg);
 static void restack( Monitor *const m ); // XXX: Reviewed
 static void run(void);
