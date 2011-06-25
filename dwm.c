@@ -79,7 +79,6 @@ typedef struct {
 } Button;
 
 typedef struct Monitor Monitor;
-typedef struct View View;
 typedef struct Client Client;
 struct Client {
 	char name[256];
@@ -93,7 +92,7 @@ struct Client {
 	Client *next;
 	Client *snext;
 	Monitor *mon;
-	View *view;
+	unsigned int view;
 	Window win;
 };
 
@@ -124,7 +123,7 @@ typedef struct {
 	void (*arrange)(Monitor *);
 } Layout;
 
-struct View {
+typedef struct {
 	char ltsymbol[ 16 ];
 	float mfact;
 	Client *clients;
@@ -132,7 +131,7 @@ struct View {
 	Client *stack;
 	const Layout *lt;
 	Monitor *mon;
-};
+} View;
 
 struct Monitor {
 	char ltsymbol[16];
