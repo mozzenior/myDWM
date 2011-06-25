@@ -218,7 +218,7 @@ static void mirrortile( Monitor *const m ); // XXX: Reviewed
 static void monocle( Monitor *const m ); // XXX: Reviewed
 static void movemouse( const Arg *arg ); // XXX: Reviewed
 static Client *nexttiled(Client *c); // XXX: Reviewed
-static Monitor *ptrtomon(int x, int y);
+static Monitor *ptrtomon(int x, int y); // XXX: Reviewed
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg); // XXX: Reviewed
 static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
