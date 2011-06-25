@@ -179,7 +179,7 @@ static void cleanup(void);
 static void cleanupmon(Monitor *mon);
 static void clearurgent(Client *c);
 static void clientmessage(XEvent *e);
-static void configure(Client *c);
+static void configure(Client *c); // XXX: Reviewed
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static Monitor *createmon(void);
