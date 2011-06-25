@@ -258,7 +258,7 @@ static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
-static void zoom(const Arg *arg);
+static void zoom(const Arg *arg); // XXX: Reviewed
 
 /* variables */
 static const char broken[] = "broken";
@@ -2115,20 +2115,22 @@ xerrorstart(Display *dpy, XErrorEvent *ee) {
 }
 
 void
-zoom(const Arg *arg) {
-	Client *c = selmon->sel;
+zoom( const Arg *arg ) {
+	Client *c;
 
-	if(!selmon->lt[selmon->sellt]->arrange
-	|| selmon->lt[selmon->sellt]->arrange == monocle
-	|| (selmon->sel && selmon->sel->isfloating))
-		return;
-	if(c == nexttiled(selmon->clients))
-		if(!c || !(c = nexttiled(c->next)))
-			return;
-	detach(c);
-	attach(c);
-	focus(c);
-	arrange(c->mon);
+	if ( ( SELVIEW( selmon ).lt->arrange && SELVIEW( selmon ).lt->arrange != monocle )
+		&& !( SELVIEW( selmon ).sel && SELVIEW( selmon ).sel->isfloating ) ) {
+		c = SELVIEW( selmon ).sel;
+		if ( c && c == nexttiled( SELVIEW( selmon ).clients ) ) {
+			c = nexttiled( c->next );
+			if ( !c )
+				return;
+		}
+		detach( c );
+		attach( c );
+		focus( c );
+		arrange( c->mon );
+	}
 }
 
 int
