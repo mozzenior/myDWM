@@ -167,7 +167,7 @@ typedef struct {
 /* function declarations */
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
-static void arrange(Monitor *m);
+static void arrange(Monitor *m); // XXX: Reviewed
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attach2(Client *c); // TODO: Rename to attach.
@@ -191,12 +191,12 @@ static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...);
 static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
-static void drawbars(void);
+static void drawbars(void); // XXX: Reviewed
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
-static void focus(Client *c);
+static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
@@ -204,7 +204,7 @@ static unsigned long getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y);
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
-static void grabbuttons(Client *c, Bool focused);
+static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void);
 static void initfont(const char *fontstr);
 static Bool isprotodel(Client *c);
@@ -789,8 +789,8 @@ void
 drawbars(void) {
 	Monitor *m;
 
-	for(m = mons; m; m = m->next)
-		drawbar(m);
+	for ( m = mons ; m ; m = m->next )
+		drawbar( m );
 }
 
 void
