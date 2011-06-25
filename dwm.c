@@ -216,7 +216,7 @@ static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
 static void mirrortile( Monitor *const m ); // XXX: Reviewed
 static void monocle( Monitor *const m ); // XXX: Reviewed
-static void movemouse(const Arg *arg);
+static void movemouse( const Arg *arg ); // XXX: Reviewed
 static Client *nexttiled(Client *c); // XXX: Reviewed
 static Monitor *ptrtomon(int x, int y);
 static void propertynotify(XEvent *e);
@@ -1295,57 +1295,63 @@ monocle( Monitor *const m ) {
 }
 
 void
-movemouse(const Arg *arg) {
+movemouse( const Arg *arg ) {
 	int x, y, ocx, ocy, nx, ny;
-	Client *c;
+	Client *const c = SELVIEW( selmon ).sel;
 	Monitor *m;
 	XEvent ev;
 
-	if(!(c = selmon->sel))
+	if ( !c )
 		return;
-	restack(selmon);
+
+	restack( selmon );
 	ocx = c->x;
 	ocy = c->y;
-	if(XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
-	None, cursor[CurMove], CurrentTime) != GrabSuccess)
+	if ( !( XGrabPointer( dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
+		None, cursor[ CurMove ], CurrentTime ) == GrabSuccess ) )
 		return;
-	if(!getrootptr(&x, &y))
+	if ( !getrootptr( &x, &y ) )
 		return;
+
 	do {
-		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
-		switch (ev.type) {
+		XMaskEvent( dpy, MOUSEMASK | ExposureMask | SubstructureRedirectMask, &ev );
+
+		switch ( ev.type ) {
 		case ConfigureRequest:
 		case Expose:
 		case MapRequest:
-			handler[ev.type](&ev);
+			handler[ ev.type ]( &ev );
 			break;
 		case MotionNotify:
-			nx = ocx + (ev.xmotion.x - x);
-			ny = ocy + (ev.xmotion.y - y);
-			if(snap && nx >= selmon->wx && nx <= selmon->wx + selmon->ww
-			&& ny >= selmon->wy && ny <= selmon->wy + selmon->wh) {
-				if(abs(selmon->wx - nx) < snap)
+			nx = ocx + ( ev.xmotion.x - x );
+			ny = ocy + ( ev.xmotion.y - y );
+			if ( snap
+				&& ( selmon->wx <= nx && nx <= selmon->wx + selmon->ww )
+				&& ( selmon->wy <= ny && ny <= selmon->wy + selmon->wh ) ) {
+				if ( abs( selmon->wx - nx ) < snap )
 					nx = selmon->wx;
-				else if(abs((selmon->wx + selmon->ww) - (nx + WIDTH(c))) < snap)
-					nx = selmon->wx + selmon->ww - WIDTH(c);
-				if(abs(selmon->wy - ny) < snap)
+				else if ( abs( ( selmon->wx + selmon->ww ) - ( nx + WIDTH( c ) ) ) < snap )
+					nx = selmon->wx + selmon->ww - WIDTH( c );
+
+				if ( abs( selmon->wy - ny ) < snap )
 					ny = selmon->wy;
-				else if(abs((selmon->wy + selmon->wh) - (ny + HEIGHT(c))) < snap)
-					ny = selmon->wy + selmon->wh - HEIGHT(c);
-				if(!c->isfloating && selmon->lt[selmon->sellt]->arrange
-				&& (abs(nx - c->x) > snap || abs(ny - c->y) > snap))
-					togglefloating(NULL);
+				else if ( abs( ( selmon->wy + selmon->wh ) - ( ny + HEIGHT( c ) ) ) < snap )
+					ny = selmon->wy + selmon->wh - HEIGHT( c );
+
+				if ( ( !c->isfloating && SELVIEW( selmon ).lt->arrange )
+					&& ( snap < abs( nx - c->x ) || snap < abs( ny - c->y ) ) )
+					togglefloating( NULL );
 			}
-			if(!selmon->lt[selmon->sellt]->arrange || c->isfloating)
-				resize(c, nx, ny, c->w, c->h, True);
+			if ( !( !c->isfloating && SELVIEW( selmon ).lt->arrange ) )
+				resize( c, nx, ny, c->w, c->h, True );
 			break;
 		}
-	} while(ev.type != ButtonRelease);
-	XUngrabPointer(dpy, CurrentTime);
-	if((m = ptrtomon(c->x + c->w / 2, c->y + c->h / 2)) != selmon) {
-		sendmon(c, m);
+	} while ( ev.type != ButtonRelease );
+	XUngrabPointer( dpy, CurrentTime );
+	if ( ( m = ptrtomon( c->x + c->w / 2, c->y + c->h / 2 ) ) != selmon ) {
+		sendmon( c, m );
 		selmon = m;
-		focus(NULL);
+		focus( NULL );
 	}
 }
 
