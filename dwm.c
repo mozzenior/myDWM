@@ -172,7 +172,7 @@ static void clientmessage(XEvent *e);
 static void configure(Client *c); // XXX: Reviewed
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
-static Monitor *createmon(void);
+static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
 static void detach(Client *c); // XXX: Reviewed
 static void detach2( Client *c ); // TODO: Rename to detach.
@@ -595,15 +595,15 @@ createmon(void) {
 	int i;
 	View *view;
 
-	if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
-		die("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
-	m->tagset[0] = m->tagset[1] = 1;
+	if ( !( m = ( Monitor * ) calloc( 1, sizeof Monitor ) ) )
+		die( "fatal: could not malloc() %u bytes\n", sizeof Monitor );
+	m->tagset[ 0 ] = m->tagset[ 1 ] = 1;
 	m->mfact = mfact;
 	m->showbar = showbar;
 	m->topbar = topbar;
-	m->lt[0] = &layouts[0];
-	m->lt[1] = &layouts[1 % LENGTH(layouts)];
-	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
+	m->lt[ 0 ] = &layouts[ 0 ];
+	m->lt[ 1 ] = &layouts[ 1 % LENGTH( layouts ) ];
+	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof m->ltsymbol );
 	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
 		view = &m->views[ i ];
 		strncpy( view->ltsymbol, layouts[ 0 ].symbol, sizeof view->ltsymbol );
