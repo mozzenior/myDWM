@@ -237,7 +237,6 @@ static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggletag(const Arg *arg);
-static void toggleview(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -1747,16 +1746,6 @@ toggletag(const Arg *arg) {
 	newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
 	if(newtags) {
 		selmon->sel->tags = newtags;
-		arrange(selmon);
-	}
-}
-
-void
-toggleview(const Arg *arg) {
-	unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
-
-	if(newtagset) {
-		selmon->tagset[selmon->seltags] = newtagset;
 		arrange(selmon);
 	}
 }
