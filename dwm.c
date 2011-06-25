@@ -220,7 +220,7 @@ static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c); // XXX: Reviewed
 static Monitor *ptrtomon(int x, int y);
 static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
+static void quit(const Arg *arg); // XXX: Reviewed
 static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
 static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
 static void resizemouse(const Arg *arg);
