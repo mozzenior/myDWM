@@ -240,7 +240,7 @@ static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg); // XXX: Reviewed
-static void togglefloating(const Arg *arg);
+static void togglefloating( const Arg *arg ); // XXX: Reviewed
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -1781,14 +1781,15 @@ togglebar(const Arg *arg) {
 }
 
 void
-togglefloating(const Arg *arg) {
-	if(!selmon->sel)
-		return;
-	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
-	if(selmon->sel->isfloating)
-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-		       selmon->sel->w, selmon->sel->h, False);
-	arrange(selmon);
+togglefloating( const Arg *arg ) {
+	Client *const c = SELVIEW( selmon ).sel;
+
+	if ( c ) {
+		c->isfloating = !c->isfloating || c->isfixed;
+		if ( c->isfloating )
+			resize( c, c->x, c->y, c->w, c->h, False );
+		arrange( selmon );
+	}
 }
 
 void
