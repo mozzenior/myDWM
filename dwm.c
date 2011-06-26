@@ -197,7 +197,7 @@ static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // 
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void);
 static Bool hasurgentclient( const View *const v );
-static void initfont(const char *fontstr);
+static void initfont(const char *fontstr); // XXX: Reviewed
 static Bool isprotodel(Client *c); // XXX: Reviewed
 static void keypress(XEvent *e);
 static void killclient( const Arg *arg ); // XXX: Reviewed
