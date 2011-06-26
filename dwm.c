@@ -165,7 +165,7 @@ static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void); // XXX: Reviewed
 static void cleanupmon(Monitor *mon); // XXX: Reviewed
-static void clearurgent(Client *c);
+static void clearurgent(Client *c); // XXX: Reviewed
 static void clientmessage(XEvent *e);
 static void configure(Client *c); // XXX: Reviewed
 static void configurenotify(XEvent *e);
