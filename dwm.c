@@ -229,7 +229,7 @@ static void togglebar(const Arg *arg); // XXX: Reviewed
 static void togglefloating( const Arg *arg ); // XXX: Reviewed
 static void unfocus(Client *c, Bool setfocus); // XXX: Reviewed
 static void unmanage( Client *c, Bool destroyed ); // XXX: Reviewed
-static void unmapnotify(XEvent *e);
+static void unmapnotify(XEvent *e); // XXX: Reviewed
 static Bool updategeom(void); // XXX: Reviewed
 static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void); // XXX: Reviewed
