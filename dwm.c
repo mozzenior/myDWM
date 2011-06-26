@@ -193,7 +193,7 @@ static void focusstack(const Arg *arg); // XXX: Reviewed
 static unsigned long getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y); // XXX: Reviewed
 static long getstate(Window w);
-static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
+static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // XXX: Reviewed
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void);
 static Bool hasurgentclient( const View *const v );
