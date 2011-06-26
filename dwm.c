@@ -88,7 +88,6 @@ struct Client {
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
-	unsigned int tags; // TODO: Delete
 	Bool isfixed, isfloating, isurgent, oldstate;
 	Client *next;
 	Client *snext;
