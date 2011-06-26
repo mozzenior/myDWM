@@ -572,17 +572,15 @@ Monitor *
 createmon(void) {
 	Monitor *m;
 	int i;
-	View *view;
 
 	if ( !( m = ( Monitor * ) malloc( sizeof( Monitor ) ) ) )
 		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
 	m->showbar = showbar;
 	m->topbar = topbar;
 	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof( m->ltsymbol ) );
-	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
-		view = &m->views[ i ];
-		view->mfact = mfact;
-		view->lt = &layouts[ 0 ];
+	for ( i = 0 ; i < NUMVIEWS ; i++ ) {
+		m->views[ i ].mfact = mfact;
+		m->views[ i ].lt = &layouts[ 0 ];
 	}
 
 	return m;
