@@ -237,7 +237,7 @@ static void updatenumlockmask(void); // XXX: Reviewed
 static void updatesizehints(Client *c); // XXX: Reviewed
 static void updatestatus(void); // XXX: Reviewed
 static void updatetitle(Client *c); // XXX: Reviewed
-static void updatewmhints(Client *c);
+static void updatewmhints( Client *c ); // XXX: Reviewed
 static void view(const Arg *arg); // XXX: Reviewed
 static Client *wintoclient( Window w ); // XXX: Reviewed
 static Monitor *wintomon(Window w); // XXX: Reviewed
@@ -1956,17 +1956,17 @@ updatestatus(void) {
 }
 
 void
-updatewmhints(Client *c) {
+updatewmhints( Client *c ) {
 	XWMHints *wmh;
 
-	if((wmh = XGetWMHints(dpy, c->win))) {
-		if(c == selmon->sel && wmh->flags & XUrgencyHint) {
+	if ( ( wmh = XGetWMHints( dpy, c->win ) ) ) {
+		if ( c == SELVIEW( selmon ).sel && wmh->flags & XUrgencyHint ) {
 			wmh->flags &= ~XUrgencyHint;
-			XSetWMHints(dpy, c->win, wmh);
+			XSetWMHints( dpy, c->win, wmh );
 		}
 		else
-			c->isurgent = (wmh->flags & XUrgencyHint) ? True : False;
-		XFree(wmh);
+			c->isurgent = ( wmh->flags & XUrgencyHint ) ? True : False;
+		XFree( wmh );
 	}
 }
 
