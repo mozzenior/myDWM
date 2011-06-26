@@ -232,7 +232,7 @@ static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg); // XXX: Reviewed
 static void togglefloating( const Arg *arg ); // XXX: Reviewed
 static void unfocus(Client *c, Bool setfocus); // XXX: Reviewed
-static void unmanage(Client *c, Bool destroyed);
+static void unmanage( Client *c, Bool destroyed ); // XXX: Reviewed
 static void unmapnotify(XEvent *e);
 static Bool updategeom(void);
 static void updatebarpos(Monitor *m); // XXX: Reviewed
@@ -1764,27 +1764,27 @@ unfocus(Client *c, Bool setfocus) {
 }
 
 void
-unmanage(Client *c, Bool destroyed) {
+unmanage( Client *c, Bool destroyed ) {
 	Monitor *m = c->mon;
 	XWindowChanges wc;
 
 	/* The server grab construct avoids race conditions. */
-	detach(c);
-	detachstack(c);
-	if(!destroyed) {
+	detach2( c );
+	detachstack2( c );
+	if ( !destroyed ) {
 		wc.border_width = c->oldbw;
-		XGrabServer(dpy);
-		XSetErrorHandler(xerrordummy);
-		XConfigureWindow(dpy, c->win, CWBorderWidth, &wc); /* restore border */
-		XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
-		setclientstate(c, WithdrawnState);
-		XSync(dpy, False);
-		XSetErrorHandler(xerror);
-		XUngrabServer(dpy);
+		XGrabServer( dpy );
+		XSetErrorHandler( xerrordummy );
+		XConfigureWindow( dpy, c->win, CWBorderWidth, &wc ); /* restore border */
+		XUngrabButton( dpy, AnyButton, AnyModifier, c->win );
+		setclientstate( c, WithdrawnState );
+		XSync( dpy, False );
+		XSetErrorHandler( xerror );
+		XUngrabServer( dpy );
 	}
-	free(c);
-	focus(NULL);
-	arrange(m);
+	free( c );
+	focus( NULL );
+	arrange( m );
 }
 
 void
