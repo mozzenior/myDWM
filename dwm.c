@@ -656,7 +656,7 @@ drawbar(Monitor *m) {
 	for ( i = 0 ; i < NUMVIEWS ; i++ ) {
 		dc.w = TEXTW( tags[ i ] );
 		col = ( i == m->selview ) ? dc.sel : dc.norm;
-		occ = ( NULL == m->views[ i ].clients );
+		occ = ( NULL != m->views[ i ].clients );
 		urg = hasurgentclient( &m->views[ i ] );
 		drawtext( tags[ i ], col, urg );
 		drawsquare( m == selmon && m->views[ i ].sel && i == m->selview,
