@@ -44,6 +44,7 @@
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask))
 #define INRECT(X,Y,RX,RY,RW,RH) ((X) >= (RX) && (X) < (RX) + (RW) && (Y) >= (RY) && (Y) < (RY) + (RH))
+#define ISVISIBLE(C)            ( C->view == C->mon->selview )
 #define LENGTH(X)               ( sizeof( X ) / sizeof( X[ 0 ] ) )
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
@@ -341,14 +342,10 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 
 void
 arrange( Monitor *m ) {
-	Client *c;
-
 	if ( m )
-		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
-			showhide( c );
+		showhide( SELVIEW( m ).stack );
 	else for( m = mons ; m ; m = m->next )
-		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
-			showhide( c );
+		showhide( SELVIEW( m ).stack );
 
 	focus( NULL );
 
@@ -550,7 +547,8 @@ configurerequest( XEvent *e ) {
 				c->y = m->my + ( m->mh / 2 - c->h / 2 ); /* center in y direction */
 			if ( ( ev->value_mask & ( CWX | CWY ) ) && !( ev->value_mask & ( CWWidth | CWHeight ) ) )
 				configure( c );
-			XMoveResizeWindow( dpy, c->win, c->x, c->y, c->w, c->h );
+			if ( ISVISIBLE( c ) )
+				XMoveResizeWindow( dpy, c->win, c->x, c->y, c->w, c->h );
 		}
 		else
 			configure( c );
@@ -605,13 +603,15 @@ detach( Client *c ) {
 
 void
 detachstack( Client *c ) {
-	Client **tc;
+	Client **tc, *t;
 
 	for ( tc = &c->mon->views[ c->view ].stack ; *tc != c ; tc = &( *tc )->snext );
 	*tc = c->snext;
 
-	if ( c == c->mon->views[ c->view ].sel )
-		c->mon->views[ c->view ].sel = c->mon->views[ c->view ].stack;
+	if ( c == c->mon->views[ c->view ].sel ) {
+		for ( t = c->mon->views[ c->view ].stack ; t && !ISVISIBLE( t ) ; t = t->snext );
+		c->mon->views[ c->view ].sel = t;
+	}
 }
 
 void
@@ -786,8 +786,8 @@ expose(XEvent *e) {
 
 void
 focus( Client *c ) {
-	if ( !c )
-		c = SELVIEW( selmon ).stack;
+	if ( !( c && ISVISIBLE( c ) ) )
+		for ( c = SELVIEW( selmon ).stack ; c && !ISVISIBLE( c ) ; c = c->snext );
 	if ( SELVIEW( selmon ).sel && SELVIEW( selmon ).sel != c )
 		unfocus( SELVIEW( selmon ).sel, False );
 	if ( c ) {
@@ -832,16 +832,18 @@ focusstack(const Arg *arg) {
 
 	if ( SELVIEW( selmon ).sel ) {
 		if ( arg->i > 0 ) {
-			c = SELVIEW( selmon ).sel->next;
+			for ( c = SELVIEW( selmon ).sel->next ; c && !ISVISIBLE( c ) ; c = c->next );
 			if ( !c )
-				c = SELVIEW( selmon ).clients;
+				for ( c = SELVIEW( selmon ).clients ; c && !ISVISIBLE( c ) ; c = c->next );
 		}
 		else {
 			for ( i = SELVIEW( selmon ).clients ; i != SELVIEW( selmon ).sel ; i = i->next )
-				c = i;
+				if ( ISVISIBLE( i ) )
+					c = i;
 			if ( !c )
 				for ( ; i ; i = i->next )
-					c = i;
+					if ( ISVISIBLE( i ) )
+						c = i;
 		}
 		if ( c ) {
 			focus( c );
@@ -1186,7 +1188,8 @@ monocle( Monitor *const m ) {
 	Client *c;
 
 	for ( c = SELVIEW( m ).clients ; c ; c = c->next )
-		n++;
+		if ( ISVISIBLE( c ) )
+			n++;
 	if ( n > 0 ) /* override layout symbol */
 		snprintf( m->ltsymbol, sizeof( m->ltsymbol ), "[%d]", n );
 	for ( c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ) )
@@ -1280,7 +1283,7 @@ movetoview(const Arg *arg) {
 
 Client *
 nexttiled( Client *c ) {
-	for ( ; c && c->isfloating ; c = c->next );
+	for ( ; c && ( c->isfloating || !ISVISIBLE( c ) ) ; c = c->next );
 	return c;
 }
 
@@ -1456,7 +1459,7 @@ restack( Monitor *const m ) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
 		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
-			if ( !c->isfloating ) {
+			if ( !c->isfloating && ISVISIBLE( c ) ) {
 				XConfigureWindow( dpy, c->win, CWSibling | CWStackMode, &wc );
 				wc.sibling = c->win;
 			}
@@ -1607,9 +1610,16 @@ void
 showhide( Client *c ) {
 	if ( !c )
 		return;
-	XMoveWindow( dpy, c->win, c->x, c->y );
-	if ( !( !c->isfloating && c->mon->views[ c->view ].lt->arrange ) )
-		resize( c, c->x, c->y, c->w, c->h, False );
+	if ( ISVISIBLE( c ) ) { /* show clients top down */
+		XMoveWindow( dpy, c->win, c->x, c->y );
+		if ( !( !c->isfloating && c->mon->views[ c->view ].lt->arrange ) )
+			resize( c, c->x, c->y, c->w, c->h, False );
+		showhide( c->snext );
+	}
+	else { /* hide clients bottom up */
+		showhide( c->snext );
+		XMoveWindow( dpy, c->win, c->x + 2 * sw, c->y );
+	}
 }
 
 
