@@ -224,7 +224,7 @@ static void setmfact(const Arg *arg); // XXX: Reviewed
 static void setup(void);
 static void showhide(Client *c); // XXX: Reviewed
 static void sigchld(int unused);
-static void spawn(const Arg *arg);
+static void spawn(const Arg *arg); // XXX: Reviewed
 static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon( const Arg *arg ); // XXX: Reviewed
 static int textnw(const char *text, unsigned int len);
