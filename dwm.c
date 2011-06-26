@@ -342,10 +342,14 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 
 void
 arrange( Monitor *m ) {
+	int i;
+
 	if ( m )
-		showhide( SELVIEW( m ).stack );
+		for ( i = 0 ; i < NUMVIEWS ; i++ )
+			showhide( m->views[ i ].stack );
 	else for( m = mons ; m ; m = m->next )
-		showhide( SELVIEW( m ).stack );
+		for ( i = 0 ; i < NUMVIEWS ; i++ )
+			showhide( m->views[ i ].stack );
 
 	focus( NULL );
 
