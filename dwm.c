@@ -1320,7 +1320,7 @@ propertynotify( XEvent *e ) {
 		}
 		if ( ev->atom == XA_WM_NAME || ev->atom == netatom[ NetWMName ] ) {
 			updatetitle( c );
-			if ( c == c->mon->views[ c->view ]->sel )
+			if ( c == c->mon->views[ c->view ].sel )
 				drawbar( c->mon );
 		}
 	}
