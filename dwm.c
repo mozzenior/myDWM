@@ -162,7 +162,7 @@ static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c); // XXX: Reviewed
 static void attachstack(Client *c); // XXX: Reviewed
 static void buttonpress(XEvent *e);
-static void checkotherwm(void);
+static void checkotherwm(void); // XXX: Reviewed
 static void cleanup(void); // XXX: Reviewed
 static void cleanupmon(Monitor *mon); // XXX: Reviewed
 static void clearurgent(Client *c); // XXX: Reviewed
@@ -223,7 +223,7 @@ static void sigchld(int unused); // XXX: Reviewed
 static void spawn(const Arg *arg); // XXX: Reviewed
 static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon( const Arg *arg ); // XXX: Reviewed
-static int textnw(const char *text, unsigned int len);
+static int textnw(const char *text, unsigned int len); // XXX: Reviewed
 static void tile(Monitor *); // XXX: Reviewed
 static void togglebar(const Arg *arg); // XXX: Reviewed
 static void togglefloating( const Arg *arg ); // XXX: Reviewed
