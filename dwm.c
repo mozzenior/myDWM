@@ -205,7 +205,7 @@ static void monocle( Monitor *const m ); // XXX: Reviewed
 static void movemouse( const Arg *arg ); // XXX: Reviewed
 static Client *nexttiled(Client *c); // XXX: Reviewed
 static Monitor *ptrtomon(int x, int y); // XXX: Reviewed
-static void propertynotify(XEvent *e);
+static void propertynotify(XEvent *e); // XXX: Reviewed
 static void quit(const Arg *arg); // XXX: Reviewed
 static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
 static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
@@ -1292,35 +1292,36 @@ ptrtomon(int x, int y) {
 }
 
 void
-propertynotify(XEvent *e) {
+propertynotify( XEvent *e ) {
 	Client *c;
 	Window trans;
 	XPropertyEvent *ev = &e->xproperty;
 
-	if((ev->window == root) && (ev->atom == XA_WM_NAME))
+	if ( ( ev->window == root ) && ( ev->atom == XA_WM_NAME ) )
 		updatestatus();
-	else if(ev->state == PropertyDelete)
+	else if ( ev->state == PropertyDelete )
 		return; /* ignore */
-	else if((c = wintoclient(ev->window))) {
-		switch (ev->atom) {
-		default: break;
+	else if ( ( c = wintoclient( ev->window ) ) ) {
+		switch ( ev->atom ) {
 		case XA_WM_TRANSIENT_FOR:
-			XGetTransientForHint(dpy, c->win, &trans);
-			if(!c->isfloating && (c->isfloating = (wintoclient(trans) != NULL)))
-				arrange(c->mon);
+			XGetTransientForHint( dpy, c->win, &trans );
+			if ( !c->isfloating && ( c->isfloating = ( wintoclient( trans ) != NULL ) ) )
+				arrange( c->mon );
 			break;
 		case XA_WM_NORMAL_HINTS:
-			updatesizehints(c);
+			updatesizehints( c );
 			break;
 		case XA_WM_HINTS:
-			updatewmhints(c);
+			updatewmhints( c );
 			drawbars();
 			break;
+		default:
+			break;
 		}
-		if(ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]) {
-			updatetitle(c);
-			if(c == c->mon->sel)
-				drawbar(c->mon);
+		if ( ev->atom == XA_WM_NAME || ev->atom == netatom[ NetWMName ] ) {
+			updatetitle( c );
+			if ( c == c->mon->views[ c->view ]->sel )
+				drawbar( c->mon );
 		}
 	}
 }
