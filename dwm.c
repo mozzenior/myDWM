@@ -573,8 +573,8 @@ createmon(void) {
 	Monitor *m;
 	int i;
 
-	if ( !( m = ( Monitor * ) malloc( sizeof( Monitor ) ) ) )
-		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
+	if ( !( m = ( Monitor * ) calloc( 1, sizeof( Monitor ) ) ) ) // use calloc instead of malloc because calloc sets allocated memory to 0.
+		die( "fatal: could not calloc() %u bytes\n", sizeof( Monitor ) );
 	m->showbar = showbar;
 	m->topbar = topbar;
 	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof( m->ltsymbol ) );
