@@ -141,7 +141,7 @@ struct Monitor {
 	Monitor *next;
 	Window barwin;
 	unsigned int selview;
-	View views[ 9 ];
+	View views[ NUMVIEWS ];
 };
 
 /* function declarations */
