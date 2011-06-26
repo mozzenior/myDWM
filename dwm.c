@@ -183,7 +183,7 @@ static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
 static void enternotify( XEvent *e ); // XXX: Reviewed
 static void expose(XEvent *e); // XXX: Reviewed
 static void focus(Client *c); // XXX: Reviewed
-static void focusin(XEvent *e);
+static void focusin( XEvent *e ); // XXX: Reviewed
 static void focusmon( const Arg *arg ); // XXX: Reviewed
 static void focusstack(const Arg *arg); // XXX: Reviewed
 static unsigned long getcolor(const char *colstr); // XXX: Reviewed
@@ -826,11 +826,11 @@ focus( Client *c ) {
 }
 
 void
-focusin(XEvent *e) { /* there are some broken focus acquiring clients */
-	XFocusChangeEvent *ev = &e->xfocus;
+focusin( XEvent *e ) { /* XXX: there are some broken focus acquiring clients */
+	const XFocusChangeEvent *const ev = &e->xfocus;
 
-	if(selmon->sel && ev->window != selmon->sel->win)
-		XSetInputFocus(dpy, selmon->sel->win, RevertToPointerRoot, CurrentTime);
+	if ( SELVIEW( selmon ).sel && SELVIEW( selmon ).sel->win != ev->window )
+		XSetInputFocus( dpy, SELVIEW( selmon ).sel->win, RevertToPointerRoot, CurrentTime );
 }
 
 void
