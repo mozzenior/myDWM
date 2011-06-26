@@ -160,7 +160,7 @@ static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool inter
 static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c); // XXX: Reviewed
-static void attachstack2(Client *c); // TODO: Rename to attachstack.
+static void attachstack(Client *c); // XXX: Reviewed
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void); // XXX: Reviewed
@@ -381,7 +381,7 @@ attach(Client *c) {
 }
 
 void
-attachstack2(Client *c) {
+attachstack(Client *c) {
 	c->snext = c->mon->views[ c->view ].stack;
 	c->mon->views[ c->view ].stack = c;
 }
@@ -812,7 +812,7 @@ focus( Client *c ) {
 		if ( c->isurgent )
 			clearurgent( c );
 		detachstack2( c );
-		attachstack2( c );
+		attachstack( c );
 		grabbuttons( c, True );
 		XSetWindowBorder( dpy, c->win, dc.sel[ ColBorder ] );
 		XSetInputFocus( dpy, c->win, RevertToPointerRoot, CurrentTime );
@@ -1132,7 +1132,7 @@ manage( Window w, XWindowAttributes *wa ) {
 	if ( c->isfloating )
 		XRaiseWindow( dpy, c->win );
 	attach( c );
-	attachstack2( c );
+	attachstack( c );
 	XMoveResizeWindow( dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h ); /* some windows require this */
 	XMapWindow( dpy, c->win );
 	setclientstate( c, NormalState );
@@ -1505,7 +1505,7 @@ sendmon( Client *c, Monitor *m ) {
 		c->mon = m;
 		c->view = m->selview;
 		attach( c );
-		attachstack2( c );
+		attachstack( c );
 		focus( NULL );
 		arrange( NULL );
 	}
@@ -1637,7 +1637,7 @@ tag(const Arg *arg) {
 		detachstack2( c );
 		c->view = arg->ui;
 		attach( c );
-		attachstack2( c );
+		attachstack( c );
 		arrange( selmon );
 	}
 }
@@ -1845,7 +1845,7 @@ updategeom(void) {
 						detachstack2( c );
 						c->mon = mons;
 						attach( c );
-						attachstack2( c );
+						attachstack( c );
 					}
 				}
 				if ( m == selmon )
