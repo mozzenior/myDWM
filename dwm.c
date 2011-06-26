@@ -54,6 +54,7 @@
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 #define SELVIEW(M)              (M->views[ M->selview ])
+#define NUMVIEWS                9
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };        /* cursor */
@@ -271,9 +272,6 @@ static Window root;
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
-/* compile-time check if all tags fit into an unsigned int bit array. */
-struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
-
 /* function implementations */
 Bool
 applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
@@ -395,8 +393,8 @@ buttonpress( XEvent *e ) {
 		i = x = 0;
 		do {
 			x += TEXTW( tags[ i ] );
-		} while( ev->x >= x && ++i < LENGTH( tags ) );
-		if ( i < LENGTH( tags ) ) {
+		} while( ev->x >= x && ++i < NUMVIEWS );
+		if ( i < NUMVIEWS ) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
 		}
@@ -438,7 +436,7 @@ cleanup(void) {
 	int i;
 
 	for ( m = mons ; m ; m = m->next )
-		for ( i = 0 ; i < LENGTH( tags ) ; i++ )
+		for ( i = 0 ; i < NUMVIEWS ; i++ )
 			while ( m->views[ i ].clients )
 				unmanage( m->views[ i ].clients, False );
 	if ( dc.font.set )
@@ -654,7 +652,7 @@ drawbar(Monitor *m) {
 	// view tags
 
 	dc.x = 0;
-	for ( i = 0 ; i < LENGTH( tags ) ; i++ ) {
+	for ( i = 0 ; i < NUMVIEWS ; i++ ) {
 		dc.w = TEXTW( tags[ i ] );
 		col = ( i == m->selview ) ? dc.sel : dc.norm;
 		occ = ( NULL == m->views[ i ].clients );
@@ -1825,7 +1823,7 @@ updategeom(void) {
 		else { /* less monitors available nn < n */
 			for ( i = nn ; i < n ; i++ ) {
 				for ( m = mons ; m && m->next ; m = m->next );
-				for ( j = 0 ; j < LENGTH( tags ) ; j++ ) {
+				for ( j = 0 ; j < NUMVIEWS ; j++ ) {
 					while ( m->views[ j ].clients ) {
 						dirty = True;
 						c = m->views[ j ].clients;
@@ -1973,7 +1971,7 @@ wintoclient( Window w ) {
 	int i;
 
 	for ( m = mons ; m ; m = m->next )
-		for ( i = 0 ; i < LENGTH( tags ) ; i++ )
+		for ( i = 0 ; i < NUMVIEWS ; i++ )
 			for ( c = m->views[ i ].clients ; c ; c = c->next )
 				if ( w == c->win )
 					return c;
