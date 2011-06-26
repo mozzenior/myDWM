@@ -238,7 +238,7 @@ static Bool updategeom(void);
 static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void);
 static void updatenumlockmask(void);
-static void updatesizehints(Client *c);
+static void updatesizehints(Client *c); // XXX: Reviewed
 static void updatestatus(void);
 static void updatetitle(Client *c); // XXX: Reviewed
 static void updatewmhints(Client *c);
