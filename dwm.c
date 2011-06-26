@@ -159,7 +159,6 @@ struct Monitor {
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact); // XXX: Reviewed
 static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
-static void attach(Client *c); // XXX: Reviewed
 static void attach2(Client *c); // TODO: Rename to attach.
 static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
@@ -173,7 +172,6 @@ static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
-static void detach(Client *c); // XXX: Reviewed
 static void detach2( Client *c ); // TODO: Rename to detach.
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...); // XXX: Reviewed
@@ -374,12 +372,6 @@ arrangemon( Monitor *const m ) {
 	if ( SELVIEW( m ).lt->arrange )
 		SELVIEW( m ).lt->arrange( m );
 	restack( m );
-}
-
-void
-attach(Client *c) {
-	c->next = c->mon->clients;
-	c->mon->clients = c;
 }
 
 void
@@ -615,14 +607,6 @@ destroynotify(XEvent *e) {
 
 	if((c = wintoclient(ev->window)))
 		unmanage(c, True);
-}
-
-void
-detach(Client *c) {
-	Client **tc;
-
-	for(tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next);
-	*tc = c->next;
 }
 
 void
