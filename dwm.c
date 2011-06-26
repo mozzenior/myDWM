@@ -237,7 +237,7 @@ static void unmapnotify(XEvent *e);
 static Bool updategeom(void); // XXX: Reviewed
 static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void); // XXX: Reviewed
-static void updatenumlockmask(void);
+static void updatenumlockmask(void); // XXX: Reviewed
 static void updatesizehints(Client *c); // XXX: Reviewed
 static void updatestatus(void); // XXX: Reviewed
 static void updatetitle(Client *c); // XXX: Reviewed
