@@ -181,7 +181,7 @@ static void drawbars(void); // XXX: Reviewed
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]); // XXX: Reviewed
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert); // XXX: Reviewed
 static void enternotify( XEvent *e ); // XXX: Reviewed
-static void expose(XEvent *e);
+static void expose(XEvent *e); // XXX: Reviewed
 static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
 static void focusmon( const Arg *arg ); // XXX: Reviewed
