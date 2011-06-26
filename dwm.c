@@ -180,7 +180,7 @@ static void drawbar(Monitor *m); // XXX: Reviewed
 static void drawbars(void); // XXX: Reviewed
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]); // XXX: Reviewed
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert); // XXX: Reviewed
-static void enternotify(XEvent *e);
+static void enternotify( XEvent *e ); // XXX: Reviewed
 static void expose(XEvent *e);
 static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
@@ -776,21 +776,21 @@ drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
 }
 
 void
-enternotify(XEvent *e) {
+enternotify( XEvent *e ) {
 	Client *c;
 	Monitor *m;
 	XCrossingEvent *ev = &e->xcrossing;
 
-	if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
-		return;
-	if((m = wintomon(ev->window)) && m != selmon) {
-		unfocus(selmon->sel, True);
-		selmon = m;
+	if ( ( ev->window == root )
+		|| ( ev->mode == NotifyNormal && ev->detail != NotifyInferior ) ) {
+		m = wintomon( ev->window );
+		if ( m && m != selmon ) {
+			unfocus( SELVIEW( selmon ).sel, True );
+			selmon = m;
+		}
+		c = wintoclient( ev->window );
+		focus( c );
 	}
-	if((c = wintoclient(ev->window)))
-		focus(c);
-	else
-		focus(NULL);
 }
 
 void
