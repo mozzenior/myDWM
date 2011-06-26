@@ -236,7 +236,7 @@ static void unmanage( Client *c, Bool destroyed ); // XXX: Reviewed
 static void unmapnotify(XEvent *e);
 static Bool updategeom(void); // XXX: Reviewed
 static void updatebarpos(Monitor *m); // XXX: Reviewed
-static void updatebars(void);
+static void updatebars(void); // XXX: Reviewed
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c); // XXX: Reviewed
 static void updatestatus(void);
