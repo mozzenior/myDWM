@@ -1432,7 +1432,7 @@ resizemouse( const Arg *arg ) {
 					&& ( abs( nw - c->w ) > snap || abs( nh - c->h ) > snap ) )
 					togglefloating( NULL );
 			}
-			if ( !c->isfloating && SELVIEW( selmon ).lt->arrange )
+			if ( !( !c->isfloating && SELVIEW( selmon ).lt->arrange ) )
 				resize( c, c->x, c->y, nw, nh, True );
 			break;
 		}
