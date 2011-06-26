@@ -161,7 +161,6 @@ static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c); // XXX: Reviewed
 static void attach2(Client *c); // TODO: Rename to attach.
-static void attachstack(Client *c); // XXX: Reviewed
 static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -176,7 +175,6 @@ static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
 static void detach(Client *c); // XXX: Reviewed
 static void detach2( Client *c ); // TODO: Rename to detach.
-static void detachstack(Client *c); // XXX: Reviewed
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...); // XXX: Reviewed
 static Monitor *dirtomon(int dir); // XXX: Reviewed
@@ -388,12 +386,6 @@ void
 attach2(Client *c) {
 	c->next = c->mon->views[ c->view ].clients;
 	c->mon->views[ c->view ].clients = c;
-}
-
-void
-attachstack(Client *c) {
-	c->snext = c->mon->stack;
-	c->mon->stack = c;
 }
 
 void
@@ -639,19 +631,6 @@ detach2( Client *c ) {
 
 	for ( tc = &c->mon->views[ c->view ].clients ; *tc != c ; tc = &( *tc )->next );
 	*tc = c->next;
-}
-
-void
-detachstack(Client *c) {
-	Client **tc, *t;
-
-	for(tc = &c->mon->stack; *tc && *tc != c; tc = &(*tc)->snext);
-	*tc = c->snext;
-
-	if(c == c->mon->sel) {
-		for(t = c->mon->stack; t && !ISVISIBLE(t); t = t->snext);
-		c->mon->sel = t;
-	}
 }
 
 void
