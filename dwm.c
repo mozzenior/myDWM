@@ -341,11 +341,17 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 
 void
 arrange( Monitor *m ) {
+	Client *c;
+
 	if ( m )
-		showhide( SELVIEW( m ).stack );
+		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
+			showhide( c );
 	else for( m = mons ; m ; m = m->next )
-		showhide( SELVIEW( m ).stack );
+		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
+			showhide( c );
+
 	focus( NULL );
+
 	if ( m )
 		arrangemon( m );
 	else for( m = mons ; m ; m = m->next )
@@ -1585,7 +1591,6 @@ showhide( Client *c ) {
 	XMoveWindow( dpy, c->win, c->x, c->y );
 	if ( !( !c->isfloating && c->mon->views[ c->view ].lt->arrange ) )
 		resize( c, c->x, c->y, c->w, c->h, False );
-	showhide( c->snext );
 }
 
 
