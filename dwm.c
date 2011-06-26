@@ -195,7 +195,7 @@ static Bool getrootptr(int *x, int *y); // XXX: Reviewed
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // XXX: Reviewed
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
-static void grabkeys(void);
+static void grabkeys(void); // XXX: Reviewed
 static Bool hasurgentclient( const View *const v );
 static void initfont(const char *fontstr); // XXX: Reviewed
 static Bool isprotodel(Client *c); // XXX: Reviewed
