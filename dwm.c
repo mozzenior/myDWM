@@ -172,7 +172,7 @@ static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
-static void detach2( Client *c ); // TODO: Rename to detach.
+static void detach( Client *c ); // XXX: Reviewed
 static void detachstack2(Client *c); // TODO: Rename to detachstack.
 static void die(const char *errstr, ...); // XXX: Reviewed
 static Monitor *dirtomon(int dir); // XXX: Reviewed
@@ -610,7 +610,7 @@ destroynotify(XEvent *e) {
 }
 
 void
-detach2( Client *c ) {
+detach( Client *c ) {
 	Client **tc;
 
 	for ( tc = &c->mon->views[ c->view ].clients ; *tc != c ; tc = &( *tc )->next );
@@ -1500,7 +1500,7 @@ void
 sendmon( Client *c, Monitor *m ) {
 	if ( c->mon != m ) {
 		unfocus( c, True );
-		detach2( c );
+		detach( c );
 		detachstack2( c );
 		c->mon = m;
 		c->view = m->selview;
@@ -1633,7 +1633,7 @@ tag(const Arg *arg) {
 	Client *const c = SELVIEW( selmon ).sel;
 
 	if ( c ) {
-		detach2( c );
+		detach( c );
 		detachstack2( c );
 		c->view = arg->ui;
 		attach( c );
@@ -1734,7 +1734,7 @@ unmanage( Client *c, Bool destroyed ) {
 	XWindowChanges wc;
 
 	/* The server grab construct avoids race conditions. */
-	detach2( c );
+	detach( c );
 	detachstack2( c );
 	if ( !destroyed ) {
 		wc.border_width = c->oldbw;
@@ -1841,7 +1841,7 @@ updategeom(void) {
 					while ( m->views[ j ].clients ) {
 						dirty = True;
 						c = m->views[ j ].clients;
-						detach2( c );
+						detach( c );
 						detachstack2( c );
 						c->mon = mons;
 						attach( c );
@@ -2053,7 +2053,7 @@ zoom( const Arg *arg ) {
 			if ( !c )
 				return;
 		}
-		detach2( c );
+		detach( c );
 		attach( c );
 		focus( c );
 		arrange( c->mon );
