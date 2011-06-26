@@ -134,7 +134,6 @@ typedef struct {
 
 struct Monitor {
 	char ltsymbol[16]; // TODO: Delete
-	float mfact; // TODO: Delete
 	int num;
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
@@ -585,7 +584,6 @@ createmon(void) {
 	if ( !( m = ( Monitor * ) malloc( sizeof( Monitor ) ) ) )
 		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
 	m->tagset[ 0 ] = m->tagset[ 1 ] = 1;
-	m->mfact = mfact;
 	m->showbar = showbar;
 	m->topbar = topbar;
 	m->lt[ 0 ] = &layouts[ 0 ];
@@ -1175,7 +1173,7 @@ mirrortile( Monitor *const m ) {
 	// master
 
 	c = nexttiled( SELVIEW( m ).clients );
-	mh = m->mfact * m->wh;
+	mh = SELVIEW( m ).mfact * m->wh;
 	resize( c, m->wx, m->wy, m->ww - 2 * c->bw, ( n == 1 ? m->wh : mh ) - 2 * c->bw, False );
 	if ( --n == 0 )
 		return;
@@ -1675,7 +1673,7 @@ tile( Monitor *const m ) {
 	// master
 
 	c = nexttiled( SELVIEW( m ).clients );
-	mw = m->mfact * m->ww;
+	mw = SELVIEW( m ).mfact * m->ww;
 	resize( c, m->wx, m->wy, ( n == 1 ? m->ww : mw ) - 2 * c->bw, m->wh - 2 * c->bw, False );
 	if ( --n == 0 )
 		return;
