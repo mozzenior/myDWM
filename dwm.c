@@ -2069,8 +2069,8 @@ zoom( const Arg *arg ) {
 			if ( !c )
 				return;
 		}
-		detach( c );
-		attach( c );
+		detach2( c );
+		attach2( c );
 		focus( c );
 		arrange( c->mon );
 	}
