@@ -146,95 +146,95 @@ struct Monitor {
 };
 
 /* function declarations */
-static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact); // XXX: Reviewed
-static void arrange(Monitor *const m); // XXX: Reviewed
-static void arrangemon( Monitor *const m ); // XXX: Reviewed
-static void attach(Client *c); // XXX: Reviewed
-static void attachstack(Client *c); // XXX: Reviewed
-static void buttonpress( XEvent *e ); // XXX: Reviewed
-static void checkotherwm(void); // XXX: Reviewed
-static void cleanup(void); // XXX: Reviewed
-static void cleanupmon(Monitor *mon); // XXX: Reviewed
-static void clearurgent(Client *c); // XXX: Reviewed
-static void clientmessage(XEvent *e); // XXX: Reviewed
-static void configure(Client *c); // XXX: Reviewed
-static void configurenotify(XEvent *e); // XXX: Reviewed
-static void configurerequest( XEvent *e ); // XXX: Reviewed
-static Monitor *createmon(void); // XXX: Reviewed
-static void destroynotify(XEvent *e); // XXX: Reviewed
-static void detach( Client *c ); // XXX: Reviewed
-static void detachstack(Client *c); //XXX: Reviewed
-static void die(const char *errstr, ...); // XXX: Reviewed
-static Monitor *dirtomon(int dir); // XXX: Reviewed
-static void drawbar(Monitor *m); // XXX: Reviewed
-static void drawbars(void); // XXX: Reviewed
-static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]); // XXX: Reviewed
-static void drawtext(const char *text, unsigned long col[ColLast], Bool invert); // XXX: Reviewed
-static void enternotify( XEvent *e ); // XXX: Reviewed
-static void expose(XEvent *e); // XXX: Reviewed
-static void focus(Client *c); // XXX: Reviewed
-static void focusin( XEvent *e ); // XXX: Reviewed
-static void focusmon( const Arg *arg ); // XXX: Reviewed
-static void focusstack(const Arg *arg); // XXX: Reviewed
-static unsigned long getcolor(const char *colstr); // XXX: Reviewed
-static Bool getrootptr(int *x, int *y); // XXX: Reviewed
-static long getstate(Window w); // XXX: Reviewed
-static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // XXX: Reviewed
-static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
-static void grabkeys(void); // XXX: Reviewed
-static Bool hasurgentclient( const View *const v ); // XXX: Reviewed
-static void initfont(const char *fontstr); // XXX: Reviewed
-static Bool isprotodel(Client *c); // XXX: Reviewed
-static void keypress(XEvent *e); // XXX: Reviewed
-static void killclient( const Arg *arg ); // XXX: Reviewed
-static void manage( Window w, XWindowAttributes *wa ); // XXX: Reviewed
-static void mappingnotify(XEvent *e); // XXX: Reviewed
-static void maprequest(XEvent *e); // XXX: Reviewed
-static void mirrortile( Monitor *const m ); // XXX: Reviewed
-static void monocle( Monitor *const m ); // XXX: Reviewed
-static void movemouse( const Arg *arg ); // XXX: Reviewed
-static Client *nexttiled(Client *c); // XXX: Reviewed
-static Monitor *ptrtomon(int x, int y); // XXX: Reviewed
-static void propertynotify(XEvent *e); // XXX: Reviewed
-static void quit(const Arg *arg); // XXX: Reviewed
-static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX: Reviewed
-static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
-static void resizemouse( const Arg *arg ); // XXX: Reviewed
-static void restack( Monitor *const m ); // XXX: Reviewed
-static void run(void); // XXX: Reviewed
-static void scan(void); // XXX: Reviewed
-static void sendmon( Client *c, Monitor *m ); // XXX: Reviewed
-static void setclientstate(Client *c, long state); // XXX: Reviewed
-static void setlayout( const Arg *arg ); // XXX: Reviewed
-static void setmfact(const Arg *arg); // XXX: Reviewed
-static void setup(void); // XXX: Reviewed
-static void showhide(Client *c); // XXX: Reviewed
-static void sigchld(int unused); // XXX: Reviewed
-static void spawn(const Arg *arg); // XXX: Reviewed
-static void tag(const Arg *arg); // XXX: Reviewed
-static void tagmon( const Arg *arg ); // XXX: Reviewed
-static int textnw(const char *text, unsigned int len); // XXX: Reviewed
-static void tile(Monitor *); // XXX: Reviewed
-static void togglebar(const Arg *arg); // XXX: Reviewed
-static void togglefloating( const Arg *arg ); // XXX: Reviewed
-static void unfocus(Client *c, Bool setfocus); // XXX: Reviewed
-static void unmanage( Client *c, Bool destroyed ); // XXX: Reviewed
-static void unmapnotify(XEvent *e); // XXX: Reviewed
-static Bool updategeom(void); // XXX: Reviewed
-static void updatebarpos(Monitor *m); // XXX: Reviewed
-static void updatebars(void); // XXX: Reviewed
-static void updatenumlockmask(void); // XXX: Reviewed
-static void updatesizehints(Client *c); // XXX: Reviewed
-static void updatestatus(void); // XXX: Reviewed
-static void updatetitle(Client *c); // XXX: Reviewed
-static void updatewmhints( Client *c ); // XXX: Reviewed
-static void view(const Arg *arg); // XXX: Reviewed
-static Client *wintoclient( Window w ); // XXX: Reviewed
-static Monitor *wintomon(Window w); // XXX: Reviewed
-static int xerror(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
-static int xerrordummy(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
-static int xerrorstart(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
-static void zoom(const Arg *arg); // XXX: Reviewed
+static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
+static void arrange(Monitor *const m);
+static void arrangemon( Monitor *const m );
+static void attach(Client *c);
+static void attachstack(Client *c);
+static void buttonpress( XEvent *e );
+static void checkotherwm(void);
+static void cleanup(void);
+static void cleanupmon(Monitor *mon);
+static void clearurgent(Client *c);
+static void clientmessage(XEvent *e);
+static void configure(Client *c);
+static void configurenotify(XEvent *e);
+static void configurerequest( XEvent *e );
+static Monitor *createmon(void);
+static void destroynotify(XEvent *e);
+static void detach( Client *c );
+static void detachstack(Client *c);
+static void die(const char *errstr, ...);
+static Monitor *dirtomon(int dir);
+static void drawbar(Monitor *m);
+static void drawbars(void);
+static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
+static void enternotify( XEvent *e );
+static void expose(XEvent *e);
+static void focus(Client *c);
+static void focusin( XEvent *e );
+static void focusmon( const Arg *arg );
+static void focusstack(const Arg *arg);
+static unsigned long getcolor(const char *colstr);
+static Bool getrootptr(int *x, int *y);
+static long getstate(Window w);
+static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
+static void grabbuttons(Client *c, Bool focused);
+static void grabkeys(void);
+static Bool hasurgentclient( const View *const v );
+static void initfont(const char *fontstr);
+static Bool isprotodel(Client *c);
+static void keypress(XEvent *e);
+static void killclient( const Arg *arg );
+static void manage( Window w, XWindowAttributes *wa );
+static void mappingnotify(XEvent *e);
+static void maprequest(XEvent *e);
+static void mirrortile( Monitor *const m );
+static void monocle( Monitor *const m );
+static void movemouse( const Arg *arg );
+static Client *nexttiled(Client *c);
+static Monitor *ptrtomon(int x, int y);
+static void propertynotify(XEvent *e);
+static void quit(const Arg *arg);
+static void resize(Client *c, int x, int y, int w, int h, Bool interact);
+static void resizeclient(Client *c, int x, int y, int w, int h);
+static void resizemouse( const Arg *arg );
+static void restack( Monitor *const m );
+static void run(void);
+static void scan(void);
+static void sendmon( Client *c, Monitor *m );
+static void setclientstate(Client *c, long state);
+static void setlayout( const Arg *arg );
+static void setmfact(const Arg *arg);
+static void setup(void);
+static void showhide(Client *c);
+static void sigchld(int unused);
+static void spawn(const Arg *arg);
+static void tag(const Arg *arg);
+static void tagmon( const Arg *arg );
+static int textnw(const char *text, unsigned int len);
+static void tile(Monitor *);
+static void togglebar(const Arg *arg);
+static void togglefloating( const Arg *arg );
+static void unfocus(Client *c, Bool setfocus);
+static void unmanage( Client *c, Bool destroyed );
+static void unmapnotify(XEvent *e);
+static Bool updategeom(void);
+static void updatebarpos(Monitor *m);
+static void updatebars(void);
+static void updatenumlockmask(void);
+static void updatesizehints(Client *c);
+static void updatestatus(void);
+static void updatetitle(Client *c);
+static void updatewmhints( Client *c );
+static void view(const Arg *arg);
+static Client *wintoclient( Window w );
+static Monitor *wintomon(Window w);
+static int xerror(Display *dpy, XErrorEvent *ee);
+static int xerrordummy(Display *dpy, XErrorEvent *ee);
+static int xerrorstart(Display *dpy, XErrorEvent *ee);
+static void zoom(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
