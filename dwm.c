@@ -221,7 +221,7 @@ static void sendmon( Client *c, Monitor *m ); // XXX: Reviewed
 static void setclientstate(Client *c, long state); // XXX: Reviewed
 static void setlayout( const Arg *arg ); // XXX: Reviewed
 static void setmfact(const Arg *arg); // XXX: Reviewed
-static void setup(void);
+static void setup(void); // XXX: Reviewed
 static void showhide(Client *c); // XXX: Reviewed
 static void sigchld(int unused);
 static void spawn(const Arg *arg); // XXX: Reviewed
