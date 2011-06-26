@@ -44,7 +44,7 @@
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask))
 #define INRECT(X,Y,RX,RY,RW,RH) ((X) >= (RX) && (X) < (RX) + (RW) && (Y) >= (RY) && (Y) < (RY) + (RH))
-#define LENGTH(X)               (sizeof X / sizeof X[0])
+#define LENGTH(X)               ( sizeof( X ) / sizeof( X[ 0 ] ) )
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
@@ -354,7 +354,7 @@ arrange( Monitor *m ) {
 
 void
 arrangemon( Monitor *const m ) {
-	strncpy( m->ltsymbol, SELVIEW( m ).lt->symbol, sizeof m->ltsymbol );
+	strncpy( m->ltsymbol, SELVIEW( m ).lt->symbol, sizeof( m->ltsymbol ) );
 	if ( SELVIEW( m ).lt->arrange )
 		SELVIEW( m ).lt->arrange( m );
 	restack( m );
@@ -572,7 +572,7 @@ createmon(void) {
 		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
 	m->showbar = showbar;
 	m->topbar = topbar;
-	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof m->ltsymbol );
+	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof( m->ltsymbol ) );
 	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
 		view = &m->views[ i ];
 		view->mfact = mfact;
@@ -740,7 +740,7 @@ drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
 	y = dc.y + (dc.h / 2) - (h / 2) + dc.font.ascent;
 	x = dc.x + (h / 2);
 	/* shorten text if necessary */
-	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
+	for(len = MIN(olen, sizeof( buf )); len && textnw(text, len) > dc.w - h; len--);
 	if(!len)
 		return;
 	memcpy(buf, text, len);
@@ -1184,7 +1184,7 @@ monocle( Monitor *const m ) {
 	for ( c = SELVIEW( m ).clients ; c ; c = c->next )
 		n++;
 	if ( n > 0 ) /* override layout symbol */
-		snprintf( m->ltsymbol, sizeof m->ltsymbol, "[%d]", n );
+		snprintf( m->ltsymbol, sizeof( m->ltsymbol ), "[%d]", n );
 	for ( c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ) )
 		resize( c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False );
 }
@@ -1923,8 +1923,8 @@ updatesizehints(Client *c) {
 
 void
 updatetitle(Client *c) {
-	if(!gettextprop(c->win, netatom[NetWMName], c->name, sizeof c->name))
-		gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
+	if(!gettextprop(c->win, netatom[NetWMName], c->name, sizeof( c->name )))
+		gettextprop(c->win, XA_WM_NAME, c->name, sizeof( c->name ));
 	if(c->name[0] == '\0') /* hack to mark broken clients */
 		strcpy(c->name, broken);
 }
