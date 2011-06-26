@@ -245,9 +245,9 @@ static void updatewmhints(Client *c);
 static void view(const Arg *arg); // XXX: Reviewed
 static Client *wintoclient( Window w ); // XXX: Reviewed
 static Monitor *wintomon(Window w); // XXX: Reviewed
-static int xerror(Display *dpy, XErrorEvent *ee);
-static int xerrordummy(Display *dpy, XErrorEvent *ee);
-static int xerrorstart(Display *dpy, XErrorEvent *ee);
+static int xerror(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
+static int xerrordummy(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
+static int xerrorstart(Display *dpy, XErrorEvent *ee); // XXX: Reviewed
 static void zoom(const Arg *arg); // XXX: Reviewed
 
 /* variables */
