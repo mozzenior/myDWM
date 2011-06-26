@@ -239,7 +239,7 @@ static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void); // XXX: Reviewed
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c); // XXX: Reviewed
-static void updatestatus(void);
+static void updatestatus(void); // XXX: Reviewed
 static void updatetitle(Client *c); // XXX: Reviewed
 static void updatewmhints(Client *c);
 static void view(const Arg *arg); // XXX: Reviewed
@@ -1985,9 +1985,9 @@ updatetitle(Client *c) {
 
 void
 updatestatus(void) {
-	if(!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-		strcpy(stext, "dwm-"VERSION);
-	drawbar(selmon);
+	if ( !gettextprop( root, XA_WM_NAME, stext, sizeof( stext ) ) )
+		strcpy( stext, "myDWM-"VERSION );
+	drawbar( selmon );
 }
 
 void
