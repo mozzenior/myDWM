@@ -168,7 +168,7 @@ static void cleanupmon(Monitor *mon); // XXX: Reviewed
 static void clearurgent(Client *c); // XXX: Reviewed
 static void clientmessage(XEvent *e); // XXX: Reviewed
 static void configure(Client *c); // XXX: Reviewed
-static void configurenotify(XEvent *e);
+static void configurenotify(XEvent *e); // XXX: Reviewed
 static void configurerequest(XEvent *e);
 static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
