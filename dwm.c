@@ -140,12 +140,8 @@ struct Monitor {
 	int wx, wy, ww, wh;   /* window area  */
 	Bool showbar;
 	Bool topbar;
-	Client *clients; // TODO: Delete
-	Client *sel; // TODO: Delete
-	Client *stack; // TODO: Delete
 	Monitor *next;
 	Window barwin;
-	const Layout *lt[2]; // TODO: Delete
 	unsigned int selview;
 	View views[ 9 ];
 };
@@ -351,9 +347,9 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 void
 arrange( Monitor *m ) {
 	if ( m )
-		showhide( m->stack );
+		showhide( SELVIEW( m ).stack );
 	else for( m = mons ; m ; m = m->next )
-		showhide( m->stack );
+		showhide( SELVIEW( m ).stack );
 	focus( NULL );
 	if ( m )
 		arrangemon( m );
@@ -582,8 +578,6 @@ createmon(void) {
 		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
 	m->showbar = showbar;
 	m->topbar = topbar;
-	m->lt[ 0 ] = &layouts[ 0 ];
-	m->lt[ 1 ] = &layouts[ 1 % LENGTH( layouts ) ];
 	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof m->ltsymbol );
 	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
 		view = &m->views[ i ];
