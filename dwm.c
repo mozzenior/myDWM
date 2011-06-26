@@ -195,11 +195,11 @@ static void grabkeys(void); // XXX: Reviewed
 static Bool hasurgentclient( const View *const v ); // XXX: Reviewed
 static void initfont(const char *fontstr); // XXX: Reviewed
 static Bool isprotodel(Client *c); // XXX: Reviewed
-static void keypress(XEvent *e);
+static void keypress(XEvent *e); // XXX: Reviewed
 static void killclient( const Arg *arg ); // XXX: Reviewed
 static void manage( Window w, XWindowAttributes *wa ); // XXX: Reviewed
-static void mappingnotify(XEvent *e);
-static void maprequest(XEvent *e);
+static void mappingnotify(XEvent *e); // XXX: Reviewed
+static void maprequest(XEvent *e); // XXX: Reviewed
 static void mirrortile( Monitor *const m ); // XXX: Reviewed
 static void monocle( Monitor *const m ); // XXX: Reviewed
 static void movemouse( const Arg *arg ); // XXX: Reviewed
