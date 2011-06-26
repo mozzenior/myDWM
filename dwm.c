@@ -169,7 +169,7 @@ static void clearurgent(Client *c); // XXX: Reviewed
 static void clientmessage(XEvent *e); // XXX: Reviewed
 static void configure(Client *c); // XXX: Reviewed
 static void configurenotify(XEvent *e); // XXX: Reviewed
-static void configurerequest(XEvent *e);
+static void configurerequest( XEvent *e ); // XXX: Reviewed
 static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
 static void detach( Client *c ); // XXX: Reviewed
@@ -533,36 +533,36 @@ configurenotify(XEvent *e) {
 }
 
 void
-configurerequest(XEvent *e) {
+configurerequest( XEvent *e ) {
 	Client *c;
 	Monitor *m;
 	XConfigureRequestEvent *ev = &e->xconfigurerequest;
 	XWindowChanges wc;
 
-	if((c = wintoclient(ev->window))) {
-		if(ev->value_mask & CWBorderWidth)
+	if ( ( c = wintoclient( ev->window ) ) ) {
+		if ( ev->value_mask & CWBorderWidth )
 			c->bw = ev->border_width;
-		else if(c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
+		else if ( c->isfloating || !SELVIEW( selmon ).lt->arrange ) {
 			m = c->mon;
-			if(ev->value_mask & CWX)
+			if ( ev->value_mask & CWX )
 				c->x = m->mx + ev->x;
-			if(ev->value_mask & CWY)
+			if ( ev->value_mask & CWY )
 				c->y = m->my + ev->y;
-			if(ev->value_mask & CWWidth)
+			if ( ev->value_mask & CWWidth )
 				c->w = ev->width;
-			if(ev->value_mask & CWHeight)
+			if ( ev->value_mask & CWHeight )
 				c->h = ev->height;
-			if((c->x + c->w) > m->mx + m->mw && c->isfloating)
-				c->x = m->mx + (m->mw / 2 - c->w / 2); /* center in x direction */
-			if((c->y + c->h) > m->my + m->mh && c->isfloating)
-				c->y = m->my + (m->mh / 2 - c->h / 2); /* center in y direction */
-			if((ev->value_mask & (CWX|CWY)) && !(ev->value_mask & (CWWidth|CWHeight)))
-				configure(c);
-			if(ISVISIBLE(c))
-				XMoveResizeWindow(dpy, c->win, c->x, c->y, c->w, c->h);
+			if ( ( c->x + c->w ) > m->mx + m->mw && c->isfloating )
+				c->x = m->mx + ( m->mw / 2 - c->w / 2 ); /* center in x direction */
+			if ( ( c->y + c->h ) > m->my + m->mh && c->isfloating )
+				c->y = m->my + ( m->mh / 2 - c->h / 2 ); /* center in y direction */
+			if ( ( ev->value_mask & ( CWX | CWY ) ) && !( ev->value_mask & ( CWWidth | CWHeight ) ) )
+				configure( c );
+			if ( ISVISIBLE( c ) )
+				XMoveResizeWindow( dpy, c->win, c->x, c->y, c->w, c->h );
 		}
 		else
-			configure(c);
+			configure( c );
 	}
 	else {
 		wc.x = ev->x;
@@ -572,9 +572,9 @@ configurerequest(XEvent *e) {
 		wc.border_width = ev->border_width;
 		wc.sibling = ev->above;
 		wc.stack_mode = ev->detail;
-		XConfigureWindow(dpy, ev->window, ev->value_mask, &wc);
+		XConfigureWindow( dpy, ev->window, ev->value_mask, &wc );
 	}
-	XSync(dpy, False);
+	XSync( dpy, False );
 }
 
 Monitor *
