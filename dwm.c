@@ -192,6 +192,7 @@ static void maprequest(XEvent *e);
 static void mirrortile( Monitor *const m );
 static void monocle( Monitor *const m );
 static void movemouse( const Arg *arg );
+static void movetomon( const Arg *arg );
 static void movetoview(const Arg *arg);
 static Client *nexttiled(Client *c);
 static Monitor *ptrtomon(int x, int y);
@@ -211,7 +212,6 @@ static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
-static void tagmon( const Arg *arg );
 static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
@@ -1260,6 +1260,13 @@ movemouse( const Arg *arg ) {
 }
 
 void
+movetomon( const Arg *arg ) {
+	if ( SELVIEW( selmon ).sel ) {
+		sendmon( SELVIEW( selmon ).sel, dirtomon( arg->i ) );
+	}
+}
+
+void
 movetoview(const Arg *arg) {
 	Client *const c = SELVIEW( selmon ).sel;
 
@@ -1625,13 +1632,6 @@ spawn(const Arg *arg) {
 		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
 		perror(" failed");
 		exit(0);
-	}
-}
-
-void
-tagmon( const Arg *arg ) {
-	if ( SELVIEW( selmon ).sel ) {
-		sendmon( SELVIEW( selmon ).sel, dirtomon( arg->i ) );
 	}
 }
 
