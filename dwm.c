@@ -165,7 +165,7 @@ static void attachstack(Client *c); // XXX: Reviewed
 static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
-static void cleanup(void);
+static void cleanup(void); // XXX: Reviewed
 static void cleanupmon(Monitor *mon); // XXX: Reviewed
 static void clearurgent(Client *c);
 static void clientmessage(XEvent *e);
@@ -196,7 +196,7 @@ static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // XXX: Reviewed
 static void grabbuttons(Client *c, Bool focused); // XXX: Reviewed
 static void grabkeys(void); // XXX: Reviewed
-static Bool hasurgentclient( const View *const v );
+static Bool hasurgentclient( const View *const v ); // XXX: Reviewed
 static void initfont(const char *fontstr); // XXX: Reviewed
 static Bool isprotodel(Client *c); // XXX: Reviewed
 static void keypress(XEvent *e);
@@ -459,24 +459,26 @@ checkotherwm(void) {
 void
 cleanup(void) {
 	Monitor *m;
+	int i;
 
-	for(m = mons; m; m = m->next)
-		while(m->stack)
-			unmanage(m->stack, False);
-	if(dc.font.set)
-		XFreeFontSet(dpy, dc.font.set);
+	for ( m = mons ; m ; m = m->next )
+		for ( i = 0 ; i < LENGTH( tags ) ; i++ )
+			while ( m->views[ i ].clients )
+				unmanage( m->views[ i ].clients, False );
+	if ( dc.font.set )
+		XFreeFontSet( dpy, dc.font.set );
 	else
-		XFreeFont(dpy, dc.font.xfont);
-	XUngrabKey(dpy, AnyKey, AnyModifier, root);
-	XFreePixmap(dpy, dc.drawable);
-	XFreeGC(dpy, dc.gc);
-	XFreeCursor(dpy, cursor[CurNormal]);
-	XFreeCursor(dpy, cursor[CurResize]);
-	XFreeCursor(dpy, cursor[CurMove]);
-	while(mons)
-		cleanupmon(mons);
-	XSync(dpy, False);
-	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
+		XFreeFont( dpy, dc.font.xfont );
+	XUngrabKey( dpy, AnyKey, AnyModifier, root );
+	XFreePixmap( dpy, dc.drawable );
+	XFreeGC( dpy, dc.gc );
+	XFreeCursor( dpy, cursor[ CurNormal ] );
+	XFreeCursor( dpy, cursor[ CurResize ] );
+	XFreeCursor( dpy, cursor[ CurMove ] );
+	while ( mons )
+		cleanupmon( mons );
+	XSync( dpy, False );
+	XSetInputFocus( dpy, PointerRoot, RevertToPointerRoot, CurrentTime );
 }
 
 void
