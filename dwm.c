@@ -161,7 +161,7 @@ static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
 static void attach(Client *c); // XXX: Reviewed
 static void attachstack(Client *c); // XXX: Reviewed
-static void buttonpress(XEvent *e);
+static void buttonpress( XEvent *e ); // XXX: Reviewed
 static void checkotherwm(void); // XXX: Reviewed
 static void cleanup(void); // XXX: Reviewed
 static void cleanupmon(Monitor *mon); // XXX: Reviewed
@@ -387,7 +387,7 @@ attachstack(Client *c) {
 }
 
 void
-buttonpress(XEvent *e) {
+buttonpress( XEvent *e ) {
 	unsigned int i, x, click;
 	Arg arg = {0};
 	Client *c;
@@ -396,35 +396,37 @@ buttonpress(XEvent *e) {
 
 	click = ClkRootWin;
 	/* focus monitor if necessary */
-	if((m = wintomon(ev->window)) && m != selmon) {
-		unfocus(selmon->sel, True);
+	if ( ( m = wintomon( ev->window ) ) && m != selmon ) {
+		unfocus( SELVIEW( selmon ).sel, True );
 		selmon = m;
-		focus(NULL);
+		focus( NULL );
 	}
-	if(ev->window == selmon->barwin) {
+	if ( ev->window == selmon->barwin ) {
 		i = x = 0;
 		do {
-			x += TEXTW(tags[i]);
-		} while(ev->x >= x && ++i < LENGTH(tags));
-		if(i < LENGTH(tags)) {
+			x += TEXTW( tags[ i ] );
+		} while( ev->x >= x && ++i < LENGTH( tags ) );
+		if ( i < LENGTH( tags ) ) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
 		}
-		else if(ev->x < x + blw)
+		else if ( ev->x < x + blw )
 			click = ClkLtSymbol;
-		else if(ev->x > selmon->wx + selmon->ww - TEXTW(stext))
+		else if ( ev->x > selmon->wx + selmon->ww - TEXTW( stext ) )
 			click = ClkStatusText;
 		else
 			click = ClkWinTitle;
 	}
-	else if((c = wintoclient(ev->window))) {
-		focus(c);
+	else if ( ( c = wintoclient( ev->window ) ) ) {
+		focus( c );
 		click = ClkClientWin;
 	}
-	for(i = 0; i < LENGTH(buttons); i++)
-		if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
-		&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+	for ( i = 0 ; i < LENGTH( buttons ) ; i++ )
+		if ( click == buttons[ i ].click
+			&& buttons[ i ].func
+			&& buttons[ i ].button == ev->button
+			&& ( CLEANMASK( buttons[ i ].mask ) == CLEANMASK( ev->state ) ) )
+			buttons[ i ].func( click == ClkTagBar && buttons[ i ].arg.i == 0 ? &arg : &buttons[ i ].arg );
 }
 
 void
