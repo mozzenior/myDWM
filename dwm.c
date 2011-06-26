@@ -211,8 +211,8 @@ static void resize(Client *c, int x, int y, int w, int h, Bool interact); // XXX
 static void resizeclient(Client *c, int x, int y, int w, int h); // XXX: Reviewed
 static void resizemouse( const Arg *arg ); // XXX: Reviewed
 static void restack( Monitor *const m ); // XXX: Reviewed
-static void run(void);
-static void scan(void);
+static void run(void); // XXX: Reviewed
+static void scan(void); // XXX: Reviewed
 static void sendmon( Client *c, Monitor *m ); // XXX: Reviewed
 static void setclientstate(Client *c, long state); // XXX: Reviewed
 static void setlayout( const Arg *arg ); // XXX: Reviewed
