@@ -44,14 +44,12 @@
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask))
 #define INRECT(X,Y,RX,RY,RW,RH) ((X) >= (RX) && (X) < (RX) + (RW) && (Y) >= (RY) && (Y) < (RY) + (RH))
-#define ISVISIBLE(C)            (True)
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 #define SELVIEW(M)              (M->views[ M->selview ])
 #define NUMVIEWS                9
@@ -546,8 +544,7 @@ configurerequest( XEvent *e ) {
 				c->y = m->my + ( m->mh / 2 - c->h / 2 ); /* center in y direction */
 			if ( ( ev->value_mask & ( CWX | CWY ) ) && !( ev->value_mask & ( CWWidth | CWHeight ) ) )
 				configure( c );
-			if ( ISVISIBLE( c ) )
-				XMoveResizeWindow( dpy, c->win, c->x, c->y, c->w, c->h );
+			XMoveResizeWindow( dpy, c->win, c->x, c->y, c->w, c->h );
 		}
 		else
 			configure( c );
@@ -604,15 +601,13 @@ detach( Client *c ) {
 
 void
 detachstack( Client *c ) {
-	Client **tc, *t;
+	Client **tc;
 
 	for ( tc = &c->mon->views[ c->view ].stack ; *tc != c ; tc = &( *tc )->snext );
 	*tc = c->snext;
 
-	if ( c == c->mon->views[ c->view ].sel ) {
-		for ( t = c->mon->views[ c->view ].stack ; t && !ISVISIBLE( t ) ; t = t->snext );
-		c->mon->views[ c->view ].sel = t;
-	}
+	if ( c == c->mon->views[ c->view ].sel )
+		c->mon->views[ c->view ].sel = c->mon->views[ c->view ].stack;
 }
 
 void
