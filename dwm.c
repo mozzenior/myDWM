@@ -243,7 +243,7 @@ static void updatestatus(void);
 static void updatetitle(Client *c); // XXX: Reviewed
 static void updatewmhints(Client *c);
 static void view(const Arg *arg); // XXX: Reviewed
-static Client *wintoclient(Window w);
+static Client *wintoclient( Window w ); // XXX: Reviewed
 static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
@@ -2013,14 +2013,16 @@ view(const Arg *arg) {
 }
 
 Client *
-wintoclient(Window w) {
+wintoclient( Window w ) {
 	Client *c;
-	Monitor *m;
+	const Monitor *m;
+	int i;
 
-	for(m = mons; m; m = m->next)
-		for(c = m->clients; c; c = c->next)
-			if(c->win == w)
-				return c;
+	for ( m = mons ; m ; m = m->next )
+		for ( i = 0 ; i < LENGTH( tags ) ; i++ )
+			for ( c = m->views[ i ].clients ; c ; c = c->next )
+				if ( w == c->win )
+					return c;
 	return NULL;
 }
 
