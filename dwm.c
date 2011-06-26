@@ -234,7 +234,7 @@ static void togglefloating( const Arg *arg ); // XXX: Reviewed
 static void unfocus(Client *c, Bool setfocus); // XXX: Reviewed
 static void unmanage( Client *c, Bool destroyed ); // XXX: Reviewed
 static void unmapnotify(XEvent *e);
-static Bool updategeom(void);
+static Bool updategeom(void); // XXX: Reviewed
 static void updatebarpos(Monitor *m); // XXX: Reviewed
 static void updatebars(void);
 static void updatenumlockmask(void);
@@ -1831,80 +1831,81 @@ updategeom(void) {
 	Bool dirty = False;
 
 #ifdef XINERAMA
-	if(XineramaIsActive(dpy)) {
+	if ( XineramaIsActive( dpy ) ) {
 		int i, j, n, nn;
 		Client *c;
 		Monitor *m;
-		XineramaScreenInfo *info = XineramaQueryScreens(dpy, &nn);
+		XineramaScreenInfo *info = XineramaQueryScreens( dpy, &nn );
 		XineramaScreenInfo *unique = NULL;
 
-		info = XineramaQueryScreens(dpy, &nn);
-		for(n = 0, m = mons; m; m = m->next, n++);
+		info = XineramaQueryScreens( dpy, &nn );
+		for ( n = 0, m = mons ; m ; m = m->next, n++ );
 		/* only consider unique geometries as separate screens */
-		if(!(unique = (XineramaScreenInfo *)malloc(sizeof(XineramaScreenInfo) * nn)))
-			die("fatal: could not malloc() %u bytes\n", sizeof(XineramaScreenInfo) * nn);
-		for(i = 0, j = 0; i < nn; i++)
-			if(isuniquegeom(unique, j, &info[i]))
-				memcpy(&unique[j++], &info[i], sizeof(XineramaScreenInfo));
-		XFree(info);
+		if ( !( unique = ( XineramaScreenInfo * ) malloc( sizeof( XineramaScreenInfo ) * nn ) ) )
+			die( "fatal: could not malloc() %u bytes\n", sizeof( XineramaScreenInfo ) * nn );
+		for ( i = 0, j = 0 ; i < nn ; i++ )
+			if ( isuniquegeom( unique, j, &info[ i ] ) )
+				memcpy( &unique[ j++ ], &info[ i ], sizeof( XineramaScreenInfo ) );
+		XFree( info );
 		nn = j;
-		if(n <= nn) {
-			for(i = 0; i < (nn - n); i++) { /* new monitors available */
-				for(m = mons; m && m->next; m = m->next);
-				if(m)
+		if ( n <= nn ) {
+			for ( i = 0 ; i < ( nn - n ) ; i++ ) { /* new monitors available */
+				for ( m = mons ; m && m->next ; m = m->next );
+				if ( m )
 					m->next = createmon();
 				else
 					mons = createmon();
 			}
-			for(i = 0, m = mons; i < nn && m; m = m->next, i++)
-				if(i >= n
-				|| (unique[i].x_org != m->mx || unique[i].y_org != m->my
-				    || unique[i].width != m->mw || unique[i].height != m->mh))
-				{
+			for ( i = 0, m = mons ; i < nn && m ; m = m->next, i++ )
+				if ( n <= i
+					|| ( unique[ i ].x_org != m->mx || unique[ i ].y_org != m->my
+				    || unique[ i ].width != m->mw || unique[ i ].height != m->mh ) ) {
 					dirty = True;
 					m->num = i;
-					m->mx = m->wx = unique[i].x_org;
-					m->my = m->wy = unique[i].y_org;
-					m->mw = m->ww = unique[i].width;
-					m->mh = m->wh = unique[i].height;
-					updatebarpos(m);
+					m->mx = m->wx = unique[ i ].x_org;
+					m->my = m->wy = unique[ i ].y_org;
+					m->mw = m->ww = unique[ i ].width;
+					m->mh = m->wh = unique[ i ].height;
+					updatebarpos( m );
 				}
 		}
 		else { /* less monitors available nn < n */
-			for(i = nn; i < n; i++) {
-				for(m = mons; m && m->next; m = m->next);
-				while(m->clients) {
-					dirty = True;
-					c = m->clients;
-					m->clients = c->next;
-					detachstack(c);
-					c->mon = mons;
-					attach(c);
-					attachstack(c);
+			for ( i = nn ; i < n ; i++ ) {
+				for ( m = mons ; m && m->next ; m = m->next );
+				for ( j = 0 ; j < LENGTH( tags ) ; j++ ) {
+					while ( m->views[ j ].clients ) {
+						dirty = True;
+						c = m->views[ j ].clients;
+						detach2( c );
+						detachstack2( c );
+						c->mon = mons;
+						attach2( c );
+						attachstack2( c );
+					}
 				}
-				if(m == selmon)
+				if ( m == selmon )
 					selmon = mons;
-				cleanupmon(m);
+				cleanupmon( m );
 			}
 		}
-		free(unique);
+		free( unique );
 	}
 	else
 #endif /* XINERAMA */
 	/* default monitor setup */
 	{
-		if(!mons)
+		if ( !mons )
 			mons = createmon();
-		if(mons->mw != sw || mons->mh != sh) {
+		if ( mons->mw != sw || mons->mh != sh ) {
 			dirty = True;
 			mons->mw = mons->ww = sw;
 			mons->mh = mons->wh = sh;
-			updatebarpos(mons);
+			updatebarpos( mons );
 		}
 	}
-	if(dirty) {
+	if ( dirty ) {
 		selmon = mons;
-		selmon = wintomon(root);
+		selmon = wintomon( root );
 	}
 	return dirty;
 }
