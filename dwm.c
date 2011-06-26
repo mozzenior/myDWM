@@ -173,7 +173,7 @@ static void configurerequest(XEvent *e);
 static Monitor *createmon(void); // XXX: Reviewed
 static void destroynotify(XEvent *e);
 static void detach( Client *c ); // XXX: Reviewed
-static void detachstack2(Client *c); // TODO: Rename to detachstack.
+static void detachstack(Client *c); //XXX: Reviewed
 static void die(const char *errstr, ...); // XXX: Reviewed
 static Monitor *dirtomon(int dir); // XXX: Reviewed
 static void drawbar(Monitor *m); // XXX: Reviewed
@@ -618,7 +618,7 @@ detach( Client *c ) {
 }
 
 void
-detachstack2( Client *c ) {
+detachstack( Client *c ) {
 	Client **tc, *t;
 
 	for ( tc = &c->mon->views[ c->view ].stack ; *tc != c ; tc = &( *tc )->snext );
@@ -811,7 +811,7 @@ focus( Client *c ) {
 			selmon = c->mon;
 		if ( c->isurgent )
 			clearurgent( c );
-		detachstack2( c );
+		detachstack( c );
 		attachstack( c );
 		grabbuttons( c, True );
 		XSetWindowBorder( dpy, c->win, dc.sel[ ColBorder ] );
@@ -1501,7 +1501,7 @@ sendmon( Client *c, Monitor *m ) {
 	if ( c->mon != m ) {
 		unfocus( c, True );
 		detach( c );
-		detachstack2( c );
+		detachstack( c );
 		c->mon = m;
 		c->view = m->selview;
 		attach( c );
@@ -1634,7 +1634,7 @@ tag(const Arg *arg) {
 
 	if ( c ) {
 		detach( c );
-		detachstack2( c );
+		detachstack( c );
 		c->view = arg->ui;
 		attach( c );
 		attachstack( c );
@@ -1735,7 +1735,7 @@ unmanage( Client *c, Bool destroyed ) {
 
 	/* The server grab construct avoids race conditions. */
 	detach( c );
-	detachstack2( c );
+	detachstack( c );
 	if ( !destroyed ) {
 		wc.border_width = c->oldbw;
 		XGrabServer( dpy );
@@ -1842,7 +1842,7 @@ updategeom(void) {
 						dirty = True;
 						c = m->views[ j ].clients;
 						detach( c );
-						detachstack2( c );
+						detachstack( c );
 						c->mon = mons;
 						attach( c );
 						attachstack( c );
