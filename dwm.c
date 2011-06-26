@@ -159,7 +159,7 @@ struct Monitor {
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact); // XXX: Reviewed
 static void arrange(Monitor *const m); // XXX: Reviewed
 static void arrangemon( Monitor *const m ); // XXX: Reviewed
-static void attach2(Client *c); // TODO: Rename to attach.
+static void attach(Client *c); // XXX: Reviewed
 static void attachstack2(Client *c); // TODO: Rename to attachstack.
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -375,7 +375,7 @@ arrangemon( Monitor *const m ) {
 }
 
 void
-attach2(Client *c) {
+attach(Client *c) {
 	c->next = c->mon->views[ c->view ].clients;
 	c->mon->views[ c->view ].clients = c;
 }
@@ -1131,7 +1131,7 @@ manage( Window w, XWindowAttributes *wa ) {
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if ( c->isfloating )
 		XRaiseWindow( dpy, c->win );
-	attach2( c );
+	attach( c );
 	attachstack2( c );
 	XMoveResizeWindow( dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h ); /* some windows require this */
 	XMapWindow( dpy, c->win );
@@ -1504,7 +1504,7 @@ sendmon( Client *c, Monitor *m ) {
 		detachstack2( c );
 		c->mon = m;
 		c->view = m->selview;
-		attach2( c );
+		attach( c );
 		attachstack2( c );
 		focus( NULL );
 		arrange( NULL );
@@ -1636,7 +1636,7 @@ tag(const Arg *arg) {
 		detach2( c );
 		detachstack2( c );
 		c->view = arg->ui;
-		attach2( c );
+		attach( c );
 		attachstack2( c );
 		arrange( selmon );
 	}
@@ -1844,7 +1844,7 @@ updategeom(void) {
 						detach2( c );
 						detachstack2( c );
 						c->mon = mons;
-						attach2( c );
+						attach( c );
 						attachstack2( c );
 					}
 				}
@@ -2054,7 +2054,7 @@ zoom( const Arg *arg ) {
 				return;
 		}
 		detach2( c );
-		attach2( c );
+		attach( c );
 		focus( c );
 		arrange( c->mon );
 	}
