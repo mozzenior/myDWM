@@ -218,7 +218,7 @@ static void restack( Monitor *const m ); // XXX: Reviewed
 static void run(void);
 static void scan(void);
 static void sendmon( Client *c, Monitor *m ); // XXX: Reviewed
-static void setclientstate(Client *c, long state);
+static void setclientstate(Client *c, long state); // XXX: Reviewed
 static void setlayout( const Arg *arg ); // XXX: Reviewed
 static void setmfact(const Arg *arg); // XXX: Reviewed
 static void setup(void);
