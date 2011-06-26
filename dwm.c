@@ -240,7 +240,7 @@ static void updatebars(void);
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
-static void updatetitle(Client *c);
+static void updatetitle(Client *c); // XXX: Reviewed
 static void updatewmhints(Client *c);
 static void view(const Arg *arg); // XXX: Reviewed
 static Client *wintoclient(Window w);
