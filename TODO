@@ -4,6 +4,4 @@ Sticky system tray.
 
 Reset key bindings according to Xmonad.
 
-Each view has its own layout.
-
 Each view has a predefined name.

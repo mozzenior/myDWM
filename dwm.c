@@ -11,12 +11,12 @@
  * in O(1) time.
  *
  * Each child of the root window is called a client, except windows which have
- * set the override_redirect flag.  Clients are organized in a linked client
- * list on each monitor, the focus history is remembered through a stack list
- * on each monitor. Each client contains a bit array to indicate the tags of a
- * client.
+ * set the override_redirect flag. Clients are organized in a linked client
+ * list on a view. Each monitor has 9 views, where each view has its own layout
+ * method. The focus history is remembered through a stack list on each view.
+ * Each client contains an integer to indicate the view in which it resides.
  *
- * Keys and tagging rules are organized as arrays and defined in config.h.
+ * Keys are organized as arrays and defined in config.h.
  *
  * To understand everything else, start reading main().
  */
@@ -2061,7 +2061,7 @@ zoom( const Arg *arg ) {
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION", © 2006-2010 dwm engineers, see LICENSE for details\n");
+		die("dwm-"VERSION", © 2006-2011 dwm engineers, see LICENSE for details\n");
 	else if(argc != 1)
 		die("usage: dwm [-v]\n");
 	if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
