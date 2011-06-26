@@ -171,7 +171,7 @@ static void configure(Client *c); // XXX: Reviewed
 static void configurenotify(XEvent *e); // XXX: Reviewed
 static void configurerequest( XEvent *e ); // XXX: Reviewed
 static Monitor *createmon(void); // XXX: Reviewed
-static void destroynotify(XEvent *e);
+static void destroynotify(XEvent *e); // XXX: Reviewed
 static void detach( Client *c ); // XXX: Reviewed
 static void detachstack(Client *c); //XXX: Reviewed
 static void die(const char *errstr, ...); // XXX: Reviewed
