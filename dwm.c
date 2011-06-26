@@ -190,7 +190,7 @@ static void focus(Client *c); // XXX: Reviewed
 static void focusin(XEvent *e);
 static void focusmon( const Arg *arg ); // XXX: Reviewed
 static void focusstack(const Arg *arg); // XXX: Reviewed
-static unsigned long getcolor(const char *colstr);
+static unsigned long getcolor(const char *colstr); // XXX: Reviewed
 static Bool getrootptr(int *x, int *y); // XXX: Reviewed
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size); // XXX: Reviewed
