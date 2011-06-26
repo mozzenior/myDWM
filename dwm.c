@@ -124,7 +124,6 @@ typedef struct {
 } Layout;
 
 typedef struct {
-	char ltsymbol[ 16 ];
 	float mfact;
 	Client *clients;
 	Client *sel;
@@ -133,7 +132,7 @@ typedef struct {
 } View;
 
 struct Monitor {
-	char ltsymbol[16]; // TODO: Delete
+	char ltsymbol[16];
 	int num;
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
@@ -359,7 +358,7 @@ arrange( Monitor *m ) {
 
 void
 arrangemon( Monitor *const m ) {
-	strncpy( SELVIEW( m ).ltsymbol, SELVIEW( m ).lt->symbol, sizeof SELVIEW( m ).ltsymbol );
+	strncpy( m->ltsymbol, SELVIEW( m ).lt->symbol, sizeof m->ltsymbol );
 	if ( SELVIEW( m ).lt->arrange )
 		SELVIEW( m ).lt->arrange( m );
 	restack( m );
@@ -581,7 +580,6 @@ createmon(void) {
 	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof m->ltsymbol );
 	for ( i = 0 ; i < LENGTH( m->views ) ; i++ ) {
 		view = &m->views[ i ];
-		strncpy( view->ltsymbol, layouts[ 0 ].symbol, sizeof view->ltsymbol );
 		view->mfact = mfact;
 		view->lt = &layouts[ 0 ];
 	}
@@ -669,8 +667,8 @@ drawbar(Monitor *m) {
 
 	// layout name of selected view
 
-	dc.w = blw = TEXTW( SELVIEW( m ).ltsymbol );
-	drawtext( SELVIEW( m ).ltsymbol, dc.norm, False );
+	dc.w = blw = TEXTW( m->ltsymbol );
+	drawtext( m->ltsymbol, dc.norm, False );
 	dc.x += dc.w;
 
 	// status
@@ -1193,7 +1191,7 @@ monocle( Monitor *const m ) {
 	for ( c = SELVIEW( m ).clients ; c ; c = c->next )
 		n++;
 	if ( n > 0 ) /* override layout symbol */
-		snprintf( SELVIEW( m ).ltsymbol, sizeof SELVIEW( m ).ltsymbol, "[%d]", n );
+		snprintf( m->ltsymbol, sizeof m->ltsymbol, "[%d]", n );
 	for ( c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ) )
 		resize( c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False );
 }
@@ -1512,7 +1510,7 @@ setclientstate(Client *c, long state) {
 void
 setlayout( const Arg *arg ) {
 	SELVIEW( selmon ).lt = ( Layout * ) arg->v;
-	strncpy( SELVIEW( selmon ).ltsymbol, SELVIEW( selmon ).lt->symbol, sizeof SELVIEW( selmon ).ltsymbol );
+	strncpy( selmon->ltsymbol, SELVIEW( selmon ).lt->symbol, sizeof( selmon->ltsymbol ) );
 	if ( SELVIEW( selmon ).sel )
 		arrange( selmon );
 	else
