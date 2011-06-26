@@ -400,7 +400,7 @@ buttonpress( XEvent *e ) {
 		} while( ev->x >= x && ++i < NUMVIEWS );
 		if ( i < NUMVIEWS ) {
 			click = ClkTagBar;
-			arg.ui = 1 << i;
+			arg.ui = i;
 		}
 		else if ( ev->x < x + blw )
 			click = ClkLtSymbol;

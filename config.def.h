@@ -31,8 +31,8 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      movetoview,     {.ui = 1 << TAG} },
+	{ MODKEY,                       KEY,      view,           {.ui = TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      movetoview,     {.ui = TAG} },
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
