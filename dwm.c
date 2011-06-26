@@ -138,9 +138,6 @@ struct Monitor {
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
-	unsigned int seltags; // TODO: Delete
-	unsigned int sellt; // TODO: Delete
-	unsigned int tagset[2]; // TODO: Delete
 	Bool showbar;
 	Bool topbar;
 	Client *clients; // TODO: Delete
@@ -583,7 +580,6 @@ createmon(void) {
 
 	if ( !( m = ( Monitor * ) malloc( sizeof( Monitor ) ) ) )
 		die( "fatal: could not malloc() %u bytes\n", sizeof( Monitor ) );
-	m->tagset[ 0 ] = m->tagset[ 1 ] = 1;
 	m->showbar = showbar;
 	m->topbar = topbar;
 	m->lt[ 0 ] = &layouts[ 0 ];
@@ -1602,7 +1598,7 @@ showhide( Client *c ) {
 	if ( !c )
 		return;
 	XMoveWindow( dpy, c->win, c->x, c->y );
-	if ( !c->mon->lt[ c->mon->sellt ]->arrange || c->isfloating )
+	if ( !( !c->isfloating && c->mon->views[ c->view ].lt->arrange ) )
 		resize( c, c->x, c->y, c->w, c->h, False );
 	showhide( c->snext );
 }
