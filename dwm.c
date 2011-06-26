@@ -201,7 +201,7 @@ static void initfont(const char *fontstr);
 static Bool isprotodel(Client *c); // XXX: Reviewed
 static void keypress(XEvent *e);
 static void killclient( const Arg *arg ); // XXX: Reviewed
-static void manage(Window w, XWindowAttributes *wa);
+static void manage( Window w, XWindowAttributes *wa ); // XXX: Reviewed
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
 static void mirrortile( Monitor *const m ); // XXX: Reviewed
@@ -1117,66 +1117,61 @@ killclient( const Arg *arg ) {
 }
 
 void
-manage(Window w, XWindowAttributes *wa) {
+manage( Window w, XWindowAttributes *wa ) {
 	static Client cz;
 	Client *c, *t = NULL;
 	Window trans = None;
 	XWindowChanges wc;
 
-	if(!(c = malloc(sizeof(Client))))
-		die("fatal: could not malloc() %u bytes\n", sizeof(Client));
+	if ( !( c = malloc( sizeof( Client ) ) ) )
+		die( "fatal: could not malloc() %u bytes\n", sizeof( Client ) );
 	*c = cz;
 	c->win = w;
-	updatetitle(c);
-	if(XGetTransientForHint(dpy, w, &trans))
-		t = wintoclient(trans);
-	if(t) {
-		c->mon = t->mon;
-		c->tags = t->tags;
-	}
-	else {
-		c->mon = selmon;
-	}
+	updatetitle( c );
+	if ( XGetTransientForHint( dpy, w, &trans ) )
+		t = wintoclient( trans );
+	c->mon = t ? t->mon : selmon;
+	c->view = c->mon->selview;
 	/* geometry */
 	c->x = c->oldx = wa->x + c->mon->wx;
 	c->y = c->oldy = wa->y + c->mon->wy;
 	c->w = c->oldw = wa->width;
 	c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
-	if(c->w == c->mon->mw && c->h == c->mon->mh) {
+	if ( c->w == c->mon->mw && c->h == c->mon->mh ) {
 		c->isfloating = 1;
 		c->x = c->mon->mx;
 		c->y = c->mon->my;
 		c->bw = 0;
 	}
 	else {
-		if(c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
-			c->x = c->mon->mx + c->mon->mw - WIDTH(c);
-		if(c->y + HEIGHT(c) > c->mon->my + c->mon->mh)
-			c->y = c->mon->my + c->mon->mh - HEIGHT(c);
-		c->x = MAX(c->x, c->mon->mx);
+		if ( c->x + WIDTH( c ) > c->mon->mx + c->mon->mw )
+			c->x = c->mon->mx + c->mon->mw - WIDTH( c );
+		if ( c->y + HEIGHT( c ) > c->mon->my + c->mon->mh )
+			c->y = c->mon->my + c->mon->mh - HEIGHT( c );
+		c->x = MAX( c->x, c->mon->mx );
 		/* only fix client y-offset, if the client center might cover the bar */
-		c->y = MAX(c->y, ((c->mon->by == 0) && (c->x + (c->w / 2) >= c->mon->wx)
-		           && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
+		c->y = MAX( c->y, ( ( c->mon->by == 0 ) && ( c->x + ( c->w / 2 ) >= c->mon->wx )
+			&& ( c->x + ( c->w / 2 ) < c->mon->wx + c->mon->ww ) ) ? bh : c->mon->my );
 		c->bw = borderpx;
 	}
 	wc.border_width = c->bw;
-	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
-	XSetWindowBorder(dpy, w, dc.norm[ColBorder]);
-	configure(c); /* propagates border_width, if size doesn't change */
-	updatesizehints(c);
-	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
-	grabbuttons(c, False);
-	if(!c->isfloating)
+	XConfigureWindow( dpy, w, CWBorderWidth, &wc );
+	XSetWindowBorder( dpy, w, dc.norm[ ColBorder ] );
+	configure( c ); /* propagates border_width, if size doesn't change */
+	updatesizehints( c );
+	XSelectInput( dpy, w, EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask );
+	grabbuttons( c, False );
+	if ( !c->isfloating )
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
-	if(c->isfloating)
-		XRaiseWindow(dpy, c->win);
-	attach(c);
-	attachstack(c);
-	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
-	XMapWindow(dpy, c->win);
-	setclientstate(c, NormalState);
-	arrange(c->mon);
+	if ( c->isfloating )
+		XRaiseWindow( dpy, c->win );
+	attach2( c );
+	attachstack2( c );
+	XMoveResizeWindow( dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h ); /* some windows require this */
+	XMapWindow( dpy, c->win );
+	setclientstate( c, NormalState );
+	arrange( c->mon );
 }
 
 void
