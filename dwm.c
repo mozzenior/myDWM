@@ -223,7 +223,7 @@ static void setlayout( const Arg *arg ); // XXX: Reviewed
 static void setmfact(const Arg *arg); // XXX: Reviewed
 static void setup(void); // XXX: Reviewed
 static void showhide(Client *c); // XXX: Reviewed
-static void sigchld(int unused);
+static void sigchld(int unused); // XXX: Reviewed
 static void spawn(const Arg *arg); // XXX: Reviewed
 static void tag(const Arg *arg); // XXX: Reviewed
 static void tagmon( const Arg *arg ); // XXX: Reviewed
