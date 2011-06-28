@@ -194,10 +194,12 @@ static void maprequest(XEvent *e);
 static void mirrortile( Monitor *const m );
 static void monocle( Monitor *const m );
 static void movemouse( const Arg *arg );
+static void movestack( const Arg *arg );
 static void movetomon( const Arg *arg );
 static void movetoview(const Arg *arg);
 static Client *nexttiled(Client *c);
 static Monitor *ptrtomon(int x, int y);
+static Client *prevclient( Client *c, Client *head );
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
@@ -1275,6 +1277,50 @@ movemouse( const Arg *arg ) {
 }
 
 void
+movestack( const Arg *arg ) {
+	unsigned int n;
+	Client *c, *cn, *pc, *ppc;
+
+	for ( c = SELVIEW( selmon ).clients, n = 0 ; c ; c = c->next )
+		n++;
+	if ( !( 1 < n ) )
+		return;
+
+	if ( 0 < arg->i ) {
+		c = SELVIEW( selmon ).sel;
+		cn = c->next;
+		detach( c );
+		if ( cn ) {
+			c->next = cn->next;
+			cn->next = c;
+		} else {
+			c->next = SELVIEW( selmon ).clients;
+			SELVIEW( selmon ).clients = c;
+		}
+		SELVIEW( selmon ).sel = c;
+	} else {
+		c = SELVIEW( selmon ).sel;
+		pc = prevclient( c, SELVIEW( selmon ).clients );
+		ppc = prevclient( pc, SELVIEW( selmon ).clients );
+		if ( c == SELVIEW( selmon ).clients ) {
+			SELVIEW( selmon ).clients = c->next;
+			c->next = NULL;
+			pc->next = c;
+		} else if ( c == SELVIEW( selmon ).clients->next ) {
+			SELVIEW( selmon ).clients = c;
+			ppc->next = pc;
+			pc->next = NULL;
+		} else {
+			ppc->next = c;
+			pc->next = c->next;
+			c->next = pc;
+		}
+	}
+
+	arrange( selmon );
+}
+
+void
 movetomon( const Arg *arg ) {
 	if ( SELVIEW( selmon ).sel ) {
 		sendmon( SELVIEW( selmon ).sel, dirtomon( arg->i ) );
@@ -1309,6 +1355,20 @@ ptrtomon(int x, int y) {
 		if(INRECT(x, y, m->wx, m->wy, m->ww, m->wh))
 			return m;
 	return selmon;
+}
+
+Client *
+prevclient( Client *c, Client *head ) {
+	Client *pc;
+
+	if ( c ) {
+		for ( pc = head ; pc && pc->next != c ; pc = pc->next );
+		if ( !pc )
+			for ( pc = head ; pc && pc->next ; pc = pc->next );
+	} else
+		pc = NULL;
+
+	return pc;
 }
 
 void
