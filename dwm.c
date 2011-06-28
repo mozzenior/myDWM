@@ -177,7 +177,6 @@ static void focusin( XEvent *e );
 static void focusmon( const Arg *arg );
 static void focusstack(const Arg *arg);
 static unsigned long getcolor(const char *colstr);
-static Bool getptredwin( Window *w );
 static Bool getrootptr(int *x, int *y);
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
@@ -865,15 +864,6 @@ getcolor(const char *colstr) {
 	if(!XAllocNamedColor(dpy, cmap, colstr, &color, &color))
 		die("error, cannot allocate color '%s'\n", colstr);
 	return color.pixel;
-}
-
-Bool
-getptredwin( Window *w ) {
-	int di;
-	unsigned int dui;
-	Window dummy;
-
-	return XQueryPointer( dpy, root, &dummy, w, &di, &di, &di, &di, &dui );
 }
 
 Bool
@@ -2037,18 +2027,9 @@ updatewmhints( Client *c ) {
 
 void
 view(const Arg *arg) {
-	Window w;
-	Client *c;
-
 	if ( arg->ui != selmon->selview ) {
 		selmon->selview = arg->ui;
 		arrange( selmon );
-
-		getptredwin( &w );
-		if ( None != w ) {
-			c = wintoclient( w );
-			focus( c );
-		}
 	}
 }
 
