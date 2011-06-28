@@ -794,7 +794,7 @@ expose(XEvent *e) {
 void
 focus( Client *c ) {
 	if ( !( c && ISVISIBLE( c ) ) )
-		for ( c = SELVIEW( selmon ).stack ; c && !ISVISIBLE( c ) ; c = c->snext );
+		c = SELVIEW( selmon ).stack;
 	if ( SELVIEW( selmon ).sel && SELVIEW( selmon ).sel != c )
 		unfocus( SELVIEW( selmon ).sel, False );
 	if ( c ) {
@@ -839,18 +839,16 @@ focusstack(const Arg *arg) {
 
 	if ( SELVIEW( selmon ).sel ) {
 		if ( arg->i > 0 ) {
-			for ( c = SELVIEW( selmon ).sel->next ; c && !ISVISIBLE( c ) ; c = c->next );
+			c = SELVIEW( selmon ).sel->next;
 			if ( !c )
-				for ( c = SELVIEW( selmon ).clients ; c && !ISVISIBLE( c ) ; c = c->next );
+				c = SELVIEW( selmon ).clients;
 		}
 		else {
 			for ( i = SELVIEW( selmon ).clients ; i != SELVIEW( selmon ).sel ; i = i->next )
-				if ( ISVISIBLE( i ) )
-					c = i;
+				c = i;
 			if ( !c )
 				for ( ; i ; i = i->next )
-					if ( ISVISIBLE( i ) )
-						c = i;
+					c = i;
 		}
 		if ( c ) {
 			focus( c );
@@ -1204,8 +1202,7 @@ monocle( Monitor *const m ) {
 	Client *c;
 
 	for ( c = SELVIEW( m ).clients ; c ; c = c->next )
-		if ( ISVISIBLE( c ) )
-			n++;
+		n++;
 	if ( n > 0 ) /* override layout symbol */
 		snprintf( m->ltsymbol, sizeof( m->ltsymbol ), "[%d]", n );
 	for ( c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ) )
@@ -1533,7 +1530,7 @@ restack( Monitor *const m ) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
 		for ( c = SELVIEW( m ).stack ; c ; c = c->snext )
-			if ( !c->isfloating && ISVISIBLE( c ) ) {
+			if ( !c->isfloating ) {
 				XConfigureWindow( dpy, c->win, CWSibling | CWStackMode, &wc );
 				wc.sibling = c->win;
 			}
