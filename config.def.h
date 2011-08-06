@@ -62,6 +62,8 @@ static Key keys[] = {
     { MODKEY,                       XK_e,      focusmon,       {.i = +1 } },
     { MODKEY|ShiftMask,             XK_w,      movetomon,      {.i = -1 } },
     { MODKEY|ShiftMask,             XK_e,      movetomon,      {.i = +1 } },
+    { MODKEY,                       XK_comma,  incmaster,      {.i = +1 } },
+    { MODKEY,                       XK_period, incmaster,      {.i = -1 } },
     TAGKEYS(                        XK_1,                      0)
     TAGKEYS(                        XK_2,                      1)
     TAGKEYS(                        XK_3,                      2)

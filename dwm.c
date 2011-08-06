@@ -124,6 +124,7 @@ typedef struct {
 } Layout;
 
 typedef struct {
+	unsigned int nmaster;
 	float mfact;
 	Client *clients;
 	Client *sel;
@@ -183,6 +184,7 @@ static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, Bool focused);
 static void grabkeys(void);
 static Bool hasurgentclient( const View *const v );
+static void incmaster(const Arg *arg);
 static void initfont(const char *fontstr);
 static Bool isprotodel(Client *c);
 static void keypress(XEvent *e);
@@ -583,6 +585,7 @@ createmon(void) {
 	m->topbar = topbar;
 	strncpy( m->ltsymbol, layouts[ 0 ].symbol, sizeof( m->ltsymbol ) );
 	for ( i = 0 ; i < NUMVIEWS ; i++ ) {
+		m->views[ i ].nmaster = 1;
 		m->views[ i ].mfact = mfact;
 		m->views[ i ].lt = &layouts[ 0 ];
 	}
@@ -964,6 +967,14 @@ hasurgentclient( const View *const v ) {
 		if ( c->isurgent )
 			return True;
 	return False;
+}
+
+void incmaster( const Arg *arg ) {
+	if ( 0 <= arg->i )
+		SELVIEW( selmon ).nmaster += 1;
+	else if ( 0 < SELVIEW( selmon ).nmaster )
+		SELVIEW( selmon ).nmaster -= 1;
+	arrange( selmon );
 }
 
 void
