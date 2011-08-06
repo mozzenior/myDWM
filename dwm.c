@@ -1769,38 +1769,75 @@ textnw(const char *text, unsigned int len) {
 void
 tile( Monitor *const m ) {
 	int x, y, h, rh, w, mw;
-	unsigned int i, n;
+	unsigned int nclient, nstack, nprocessed;
+	const unsigned int nmaster = SELVIEW( m ).nmaster;
 	Client *c;
 
-	for ( n = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), n++ );
-	if ( n == 0 )
+	// test amount of client window
+
+	for ( nclient = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), nclient++ );
+	if ( nclient == 0 )
 		return;
 
-	// master
+	// prepare common variables for later usage
 
 	c = nexttiled( SELVIEW( m ).clients );
-	mw = SELVIEW( m ).mfact * m->ww;
-	resize( c, m->wx, m->wy, ( n == 1 ? m->ww : mw ) - 2 * c->bw, m->wh - 2 * c->bw, False );
-	if ( --n == 0 )
-		return;
 
-	// tile stack
-
-	x = ( m->wx + mw > c->x + c->w ) ? c->x + c->w + 2 * c->bw : m->wx + mw;
-	y = m->wy;
-	w = ( m->wx + mw > c->x + c->w ) ? m->wx + m->ww - x : m->ww - mw;
-	h = m->wh / n;
-	rh = m->wh % n;
-	if ( h < bh ) {
-		h = m->wh;
-		rh = 0;
+	if ( 0 < nmaster ) {
+		if ( nmaster < nclient ) {
+			mw = m->ww * SELVIEW( m ).mfact;
+		} else {
+			mw = m->ww;
+		}
+	} else {
+		mw = 0;
 	}
-	for (i = 0, c = nexttiled( c->next ) ; c ; c = nexttiled( c->next ), i++, rh-- ) {
-		resize( c, x, y, w - 2 * c->bw,
-			( ( ( i + 1 == n ) ? m->wy + m->wh - y - 2 * c->bw : h - 2 * c->bw ) + ( ( 0 < rh ) ? 1 : 0 ) ),
-			False);
-		if ( h != m->wh )
+
+	// tile clients in master area
+
+	nprocessed = 0;
+	if ( nmaster ) {
+		x = m->wx;
+		y = m->wy;
+		w = mw;
+		h = m->wh / nmaster;
+		rh = m->wh % nmaster;
+
+		while ( NULL != c && nprocessed < nmaster ) {
+			resize( c, x, y,
+				w - 2 * c->bw,
+				h - 2 * c->bw + ( ( nprocessed < rh ) ? 1 : 0 ),
+				False
+			);
+
 			y = c->y + HEIGHT( c );
+			c = nexttiled( c->next );
+			++nprocessed;
+		}
+	}
+
+	// tile clients in stacked area
+
+	nstack = nclient - nprocessed;
+	nprocessed = 0;
+	if ( 0 < nstack ) {
+		x = m->wx + mw;
+		y = m->wy;
+		w = m->ww - mw;
+		h = m->wh / nstack;
+		rh = m->wh % nstack;
+
+		while ( NULL != c ) {
+			resize( c, x, y,
+				w - 2 * c->bw,
+				h - 2 * c->bw + ( ( nprocessed < rh ) ? 1 : 0 ),
+				False
+			);
+
+			y = c->y + HEIGHT( c );
+			c = nexttiled( c->next );
+			++nprocessed;
+		}
 	}
 }
 
