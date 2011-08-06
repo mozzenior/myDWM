@@ -1165,35 +1165,75 @@ maprequest(XEvent *e) {
 void
 mirrortile( Monitor *const m ) {
 	int x, y, h, w, rw, mh;
-	unsigned int i, n;
+	unsigned int nclient, nslave, nprocessed;
+	const unsigned int nmaster = SELVIEW( m ).nmaster;
 	Client *c;
 
-	for ( n = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), n++ );
-	if ( n == 0 )
+	// test amount of client window
+
+	for ( nclient = 0, c = nexttiled( SELVIEW( m ).clients ) ; c ; c = nexttiled( c->next ), nclient++ );
+	if ( 0 == nclient )
 		return;
 
-	// master
+	// prepare common variables for later usage
 
 	c = nexttiled( SELVIEW( m ).clients );
-	mh = SELVIEW( m ).mfact * m->wh;
-	resize( c, m->wx, m->wy, m->ww - 2 * c->bw, ( n == 1 ? m->wh : mh ) - 2 * c->bw, False );
-	if ( --n == 0 )
-		return;
 
-	// tile stack
+	if ( 0 < nmaster ) {
+		if ( nmaster < nclient ) {
+			mh = m->wh * SELVIEW( m ).mfact;
+		} else {
+			mh = m->wh;
+		}
+	} else {
+		mh = 0;
+	}
 
-	x = m->wx;
-	y = ( m->wy + mh > c->y + c->h ) ? c->y + c->h + 2 * c->bw : m->wy + mh;
-	w = m->ww / n;
-	rw = m->ww % n;
-	h = ( m->wy + mh > c->y + c->h ) ? m->wy + m->wh - y : m->wh - mh;
+	// mirror-tile clients in master area
 
-	for ( i = 0, c = nexttiled( c->next ) ; c ; c = nexttiled( c->next ), i++, rw-- ) {
-		resize( c, x, y,
-			( ( ( i + 1 == n ) ?  m->wx + m->mw - x - 2 * c->bw : w - 2 * c->bw ) + ( ( 0 < rw ) ? 1 : 0 ) ),
-			h - 2 * c->bw, False );
-		if ( w != m->ww )
+	nprocessed = 0;
+	if ( nmaster ) {
+		x = m->wx;
+		y = m->wy;
+		w = m->ww / nmaster;
+		rw = m->ww % nmaster;
+		h = mh;
+
+		while ( NULL != c && nprocessed < nmaster ) {
+			resize( c, x, y,
+				w - 2 * c->bw + ( ( nprocessed < rw ) ? 1 : 0 ),
+				h - 2 * c->bw,
+				False
+			);
+
 			x = c->x + WIDTH( c );
+			c = nexttiled( c->next );
+			++nprocessed;
+		}
+	}
+
+	// mirror-tile clients in slave area
+
+	nslave = nclient - nprocessed;
+	nprocessed = 0;
+	if ( 0 < nslave ) {
+		x = m->wx;
+		y = m->wy + mh;
+		w = m->ww / nslave;
+		rw = m->ww % nslave;
+		h = m->wh - mh;
+
+		while ( NULL != c ) {
+			resize( c, x, y,
+				w - 2 * c->bw + ( ( nprocessed < rw ) ? 1 : 0 ),
+				h - 2 * c->bw,
+				False
+			);
+
+			x = c->x + WIDTH( c );
+			c = nexttiled( c->next );
+			++nprocessed;
+		}
 	}
 }
 
