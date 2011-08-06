@@ -1195,8 +1195,8 @@ mirrortile( Monitor *const m ) {
 	if ( nmaster ) {
 		x = m->wx;
 		y = m->wy;
-		w = m->ww / nmaster;
-		rw = m->ww % nmaster;
+		w = ( nmaster <= nclient ) ? ( m->ww / nmaster ) : ( m->ww / nclient );
+		rw =( nmaster <= nclient ) ? ( m->ww % nmaster ) : ( m->ww % nclient );
 		h = mh;
 
 		while ( NULL != c && nprocessed < nmaster ) {
@@ -1800,8 +1800,8 @@ tile( Monitor *const m ) {
 		x = m->wx;
 		y = m->wy;
 		w = mw;
-		h = m->wh / nmaster;
-		rh = m->wh % nmaster;
+		h = ( nmaster <= nclient ) ? ( m->wh / nmaster ) : ( m->wh / nclient );
+		rh =( nmaster <= nclient ) ? ( m->wh % nmaster ) : ( m->wh % nclient );
 
 		while ( NULL != c && nprocessed < nmaster ) {
 			resize( c, x, y,
