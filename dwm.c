@@ -1165,7 +1165,7 @@ maprequest(XEvent *e) {
 void
 mirrortile( Monitor *const m ) {
 	int x, y, h, w, rw, mh;
-	unsigned int nclient, nslave, nprocessed;
+	unsigned int nclient, nstack, nprocessed;
 	const unsigned int nmaster = SELVIEW( m ).nmaster;
 	Client *c;
 
@@ -1212,15 +1212,15 @@ mirrortile( Monitor *const m ) {
 		}
 	}
 
-	// mirror-tile clients in slave area
+	// mirror-tile clients in stacked area
 
-	nslave = nclient - nprocessed;
+	nstack = nclient - nprocessed;
 	nprocessed = 0;
-	if ( 0 < nslave ) {
+	if ( 0 < nstack ) {
 		x = m->wx;
 		y = m->wy + mh;
-		w = m->ww / nslave;
-		rw = m->ww % nslave;
+		w = m->ww / nstack;
+		rw = m->ww % nstack;
 		h = m->wh - mh;
 
 		while ( NULL != c ) {
