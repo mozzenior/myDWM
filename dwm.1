@@ -4,40 +4,14 @@ dwm \- dynamic window manager
 .SH SYNOPSIS
 .B dwm
 .RB [ \-v ]
-.SH FEDORA NOTES
-Due to the nature of this software, dwm has to be rebuilt for any configuration
-changes. To achieve this in Fedora, install the
-.BR dwm\-user
-package and see
-.BR dwm\-start (1) .
-.P
-All hints, questions and bug reports should be addressed to Fedora maintainer.
-File a bug in Red Hat Bugzilla:
-.P
-.BR http://bugzilla.redhat.com/
 .SH DESCRIPTION
-dwm is a dynamic window manager for X. It manages windows in tiled, monocle
-and floating layouts. Either layout can be applied dynamically, optimising the
-environment for the application in use and the task performed.
+dwm is a dynamic window manager for X. It manages windows in tiled, mirror-titled, monocle and floating layouts. Either layout can be applied dynamically, optimising the environment for the application in use and the task performed.
 .P
-In tiled layouts windows are managed in a master and stacking area. The master
-area contains the window which currently needs most attention, whereas the
-stacking area contains all other windows. In monocle layout all windows are
-maximised to the screen size. In floating layout windows can be resized and
-moved freely. Dialog windows are always managed floating, regardless of the
-layout applied.
+In tiled layouts, windows are managed in a master and stacking area. The master area contains the windows which currently need most attention, whereas the stacking area contains all other windows. In monocle layout all windows are maximised to the screen size. In floating layout windows can be resized and moved freely. Dialog windows are always managed floating, regardless of the layout applied.
 .P
-Windows are grouped by tags. Each window can be tagged with one or multiple
-tags. Selecting certain tags displays all windows with these tags.
+Windows are grouped by views. Each view has its own layout method.
 .P
-Each screen contains a small status bar which displays all available tags, the
-layout, the title of the focused window, and the text read from the root window
-name property, if the screen is focused. A floating window is indicated with an
-empty square and a maximised floating window is indicated with a filled square
-before the windows title.  The selected tags are indicated with a different
-color. The tags of the focused window are indicated with a filled square in the
-top left corner.  The tags which are applied to one or more windows are
-indicated with an empty square in the top left corner.
+Each screen contains a small status bar which displays all available views, the layout of current view, the title of the focused window, and the text read from the root window name property, if the screen is focused. A floating window is indicated with an empty square and a maximised floating window is indicated with a filled square before the windows title. The selected view is indicated with a different color. The view of the focused window is indicated with a filled square in the top left corner. The view which is applied to one or more windows are indicated with an empty square in the top left corner.
 .P
 dwm draws a small border around windows to indicate the focus state.
 .SH OPTIONS
@@ -53,33 +27,31 @@ is read and displayed in the status text area. It can be set with the
 command.
 .TP
 .B Button1
-click on a tag label to display all windows with that tag, click on the layout
-label toggles between tiled and floating layout.
-.TP
-.B Button3
-click on a tag label adds/removes all windows with that tag to/from the view.
-.TP
-.B Mod4\-Button1
-click on a tag label applies that tag to the focused window.
-.TP
-.B Mod4\-Button3
-click on a tag label adds/removes that tag to/from the focused window.
+click on a view label to display all windows within that view.
 .SS Keyboard commands
 .TP
 .B Mod4\-Shift\-Return
 Start
-.BR uxterm (1).
+.BR roxterm (1).
 .TP
-.B Mod4\-,
+.B Mod4\-p
+Start
+.BR dmenu (1).
+.TP
+.B Mod4\-Shift\-p
+Start
+.BR gmrun (1).
+.TP
+.B Mod4\-w
 Focus previous screen, if any.
 .TP
-.B Mod4\-.
+.B Mod4\-e
 Focus next screen, if any.
 .TP
-.B Mod4\-Shift\-,
+.B Mod4\-Shift\-w
 Send focused window to previous screen, if any.
 .TP
-.B Mod4\-Shift\-.
+.B Mod4\-Shift\-e
 Send focused window to next screen, if any.
 .TP
 .B Mod4\-b
@@ -88,20 +60,26 @@ Toggles bar on and off.
 .B Mod4\-t
 Sets tiled layout.
 .TP
+.B Mod4\-r
+Sets mirror-tiled layout.
+.TP
 .B Mod4\-f
 Sets floating layout.
 .TP
 .B Mod4\-m
 Sets monocle layout.
 .TP
-.B Mod4\-space
-Toggles between current and previous layout.
-.TP
 .B Mod4\-j
 Focus next window.
 .TP
 .B Mod4\-k
 Focus previous window.
+.TP
+.B Mod4\-Shift\-j
+Move selected window down or right.
+.TP
+.B Mod4\-Shift\-k
+Move selected window up or left.
 .TP
 .B Mod4\-h
 Decrease master area size.
@@ -118,26 +96,11 @@ Close focused window.
 .B Mod4\-Shift\-space
 Toggle focused window between tiled and floating state.
 .TP
-.B Mod4\-Tab
-Toggles to the previously selected tags.
-.TP
 .B Mod4\-Shift\-[1..n]
-Apply nth tag to focused window.
-.TP
-.B Mod4\-Shift\-0
-Apply all tags to focused window.
-.TP
-.B Mod4\-Control\-Shift\-[1..n]
-Add/remove nth tag to/from focused window.
+Move focused window to nth view.
 .TP
 .B Mod4\-[1..n]
-View all windows with nth tag.
-.TP
-.B Mod4\-0
-View all windows with any tag.
-.TP
-.B Mod4\-Control\-[1..n]
-Add/remove all windows with nth tag to/from the view.
+View all windows within nth view.
 .TP
 .B Mod4\-Shift\-q
 Quit dwm.
@@ -157,24 +120,15 @@ code. This keeps it fast, secure and simple.
 .SH SEE ALSO
 .BR dmenu (1)
 .SH BUGS
-Java applications which use the XToolkit/XAWT backend may draw grey windows
-only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early
-JDK 1.6 versions, because it assumes a reparenting window manager. Possible workarounds
-are using JDK 1.4 (which doesn't contain the XToolkit/XAWT backend) or setting the
-environment variable
+Java applications which use the XToolkit/XAWT backend may draw grey windows only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early JDK 1.6 versions, because it assumes a reparenting window manager. Possible workarounds are using JDK 1.4 (which doesn't contain the XToolkit/XAWT backend) or setting the environment variable
 .BR AWT_TOOLKIT=MToolkit
 (to use the older Motif backend instead) or running
 .B xprop -root -f _NET_WM_NAME 32a -set _NET_WM_NAME LG3D
 or
 .B wmname LG3D
-(to pretend that a non-reparenting window manager is running that the
-XToolkit/XAWT backend can recognize) or when using OpenJDK setting the environment variable
+(to pretend that a non-reparenting window manager is running that the XToolkit/XAWT backend can recognize) or when using OpenJDK setting the environment variable
 .BR _JAVA_AWT_WM_NONREPARENTING=1 .
 .P
 GTK 2.10.9+ versions contain a broken
 .BR Save\-As
-file dialog implementation,
-which requests to reconfigure its window size in an endless loop. However, its
-window is still respondable during this state, so you can simply ignore the flicker
-until a new GTK version appears, which will fix this bug, approximately
-GTK 2.10.12+ versions.
+file dialog implementation, which requests to reconfigure its window size in an endless loop. However, its window is still respondable during this state, so you can simply ignore the flicker until a new GTK version appears, which will fix this bug, approximately GTK 2.10.12+ versions.
