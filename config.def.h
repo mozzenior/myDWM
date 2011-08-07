@@ -17,7 +17,7 @@ static const Bool topbar            = True;     /* False means bottom bar */
 static const char *tags[ NUMVIEWS ] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 /* layout(s) */
-static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact      = 0.5; /* factor of master area size [0.05..0.95] */
 static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
