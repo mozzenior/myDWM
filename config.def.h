@@ -28,6 +28,16 @@ static const Layout layouts[] = {
     { "><>",      NULL },    /* no layout function means floating behavior */
 };
 
+static const Rule rules[] = {
+    /* cmd              view    floating */
+    { "Cssh",           0,      True },
+    { "Dolphin",        5,      False },
+    { "Vlc",            6,      False },
+    { "Soffice",        7,      False },
+    { "Thunderbird",    8,      False },
+    { "VirtualBox",     9,      False },
+};
+
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
@@ -87,3 +97,4 @@ static Button buttons[] = {
     { ClkTagBar,            0,              Button1,        view,           {0} },
 };
 
+// vim: expandtab

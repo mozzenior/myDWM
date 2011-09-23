@@ -79,6 +79,12 @@ typedef struct {
 	const Arg arg;
 } Button;
 
+typedef struct {
+	const char *class;
+	unsigned int view; // 0 for don't mind
+	Bool isfloating;
+} Rule;
+
 typedef struct Monitor Monitor;
 typedef struct Client Client;
 struct Client {
@@ -147,6 +153,7 @@ struct Monitor {
 };
 
 /* function declarations */
+static void applyrules( Client *c );
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *const m);
 static void arrangemon( Monitor *const m );
@@ -276,6 +283,31 @@ static Window root;
 #include "config.h"
 
 /* function implementations */
+void
+applyrules( Client *c ) {
+	const char *class;
+	unsigned int i;
+	const Rule *r;
+	XClassHint ch = { 0 };
+
+	/* rule matching */
+	if ( XGetClassHint( dpy, c->win, &ch ) ) {
+		class = ch.res_class ? ch.res_class : broken;
+		for ( i = 0 ; i < LENGTH( rules ) ; i++ ) {
+			r = &rules[ i ];
+			if ( !r->class || strstr( class, r->class ) ) {
+				c->isfloating = r->isfloating;
+				if ( 0 != r->view )
+					c->view = r->view - 1;
+			}
+		}
+		if ( ch.res_class )
+			XFree( ch.res_class );
+		if ( ch.res_name )
+			XFree( ch.res_name );
+	}
+}
+
 Bool
 applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 	Bool baseismin;
@@ -1098,6 +1130,7 @@ manage( Window w, XWindowAttributes *wa ) {
 		t = wintoclient( trans );
 	c->mon = t ? t->mon : selmon;
 	c->view = c->mon->selview;
+	applyrules( c );
 	/* geometry */
 	c->x = c->oldx = wa->x + c->mon->wx;
 	c->y = c->oldy = wa->y + c->mon->wy;
